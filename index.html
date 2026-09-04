@@ -178,7 +178,7 @@
             <div class="right">
                 <div id="canvas-container" class="scheme">
                     <div class="scheme-caption">3D модель навеса</div>
-                    <canvas id="three-canvas"></canvas>
+                    <canvas id="three-canvas" style="display: block; width: 100%; height: 100%;"></canvas>
                 </div>
 
                 <div class="controls-3d">
@@ -249,7 +249,7 @@
             <div class="right">
                 <div id="fence-canvas-container" class="scheme">
                     <div class="scheme-caption">3D модель забора</div>
-                    <canvas id="fence-three-canvas"></canvas>
+                    <canvas id="fence-three-canvas" style="display: block; width: 100%; height: 100%;"></canvas>
                 </div>
 
                 <div class="controls-3d">
@@ -287,60 +287,65 @@
     <script src="https://cdn.jsdelivr.net/npm/three@r128/examples/js/controls/OrbitControls.js"></script>
 
     <script>
-        // Данные материалов
         const MATERIALS = {
             posts: { '60x60x2': 'Труба 60×60×2', '60x60x3': 'Труба 60×60×3', '80x80x3': 'Труба 80×80×3' },
             roofing: { 'ns20-50': 'Профнастил НС-20', 'ns35-50': 'Профнастил НС-35', 'ns21-50': 'Профнастил НС-21' },
             colors: { '#505050': 'Графит 7024', '#1a1a1a': 'Черный 9005', '#6b4423': 'Коричневый 8017', '#2d5016': 'Зеленый 6005' }
         };
-
         const PRICES = { CANOPY: 7000, FENCE: 1200 };
 
         function formatCurrency(v) { return new Intl.NumberFormat('ru-RU').format(Math.round(v)) + ' ₽'; }
         function formatNum(v) { return v.toFixed(2).replace('.', ','); }
 
-        // Three.js Scene
         class Scene3D {
             constructor(canvasId, type) {
                 this.canvas = document.getElementById(canvasId);
-                this.type = type;
+                if (!this.canvas) {
+                    console.error('Canvas not found:', canvasId);
+                    return;
+                }
+
+                const w = this.canvas.parentElement.clientWidth;
+                const h = this.canvas.parentElement.clientHeight;
+                
                 this.scene = new THREE.Scene();
                 this.scene.background = new THREE.Color(0xf5f7fa);
                 
-                const w = this.canvas.clientWidth, h = this.canvas.clientHeight;
                 this.camera = new THREE.PerspectiveCamera(75, w / h, 0.1, 1000);
                 this.camera.position.set(15, 10, 15);
                 this.camera.lookAt(0, 0, 0);
                 
-                this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, antialias: true });
+                this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, antialias: true, alpha: true });
                 this.renderer.setSize(w, h);
+                this.renderer.setPixelRatio(window.devicePixelRatio);
                 this.renderer.shadowMap.enabled = true;
+                this.renderer.shadowMap.type = THREE.PCFShadowShadowMap;
                 
-                // Lighting
-                const ambLight = new THREE.AmbientLight(0xfff, 0.6);
+                const ambLight = new THREE.AmbientLight(0xffffff, 0.7);
                 this.scene.add(ambLight);
-                const dirLight = new THREE.DirectionalLight(0xfff, 0.8);
+                
+                const dirLight = new THREE.DirectionalLight(0xffffff, 0.9);
                 dirLight.position.set(20, 30, 20);
                 dirLight.castShadow = true;
                 dirLight.shadow.mapSize.width = 2048;
                 dirLight.shadow.mapSize.height = 2048;
+                dirLight.shadow.camera.far = 100;
                 this.scene.add(dirLight);
                 
-                // Ground
-                const groundGeo = new THREE.PlaneGeometry(100, 100);
-                const groundMat = new THREE.MeshStandardMaterial({ color: 0xd4d4d4 });
+                const groundGeo = new THREE.PlaneGeometry(150, 150);
+                const groundMat = new THREE.MeshStandardMaterial({ color: 0xcccccc });
                 const ground = new THREE.Mesh(groundGeo, groundMat);
                 ground.rotation.x = -Math.PI / 2;
                 ground.receiveShadow = true;
                 ground.position.y = -2;
                 this.scene.add(ground);
                 
-                // Controls
                 this.controls = new OrbitControls(this.camera, this.renderer.domElement);
                 this.controls.enableDamping = true;
                 this.controls.dampingFactor = 0.05;
                 this.controls.minDistance = 10;
                 this.controls.maxDistance = 80;
+                this.controls.autoRotate = false;
                 
                 this.group = new THREE.Group();
                 this.scene.add(this.group);
@@ -351,12 +356,16 @@
 
             animate = () => {
                 requestAnimationFrame(this.animate);
-                this.controls.update();
+                if (this.controls) {
+                    this.controls.update();
+                }
                 this.renderer.render(this.scene, this.camera);
             }
 
             onResize = () => {
-                const w = this.canvas.clientWidth, h = this.canvas.clientHeight;
+                if (!this.canvas.parentElement) return;
+                const w = this.canvas.parentElement.clientWidth;
+                const h = this.canvas.parentElement.clientHeight;
                 this.camera.aspect = w / h;
                 this.camera.updateProjectionMatrix();
                 this.renderer.setSize(w, h);
@@ -365,15 +374,19 @@
             clear() {
                 while (this.group.children.length) {
                     const child = this.group.children[0];
-                    child.geometry?.dispose();
-                    child.material?.dispose();
+                    if (child.geometry) child.geometry.dispose();
+                    if (child.material) child.material.dispose();
                     this.group.remove(child);
                 }
             }
 
             createBox(w, h, d, color) {
                 const geo = new THREE.BoxGeometry(w, h, d);
-                const mat = new THREE.MeshStandardMaterial({ color, metalness: 0.7, roughness: 0.3 });
+                const mat = new THREE.MeshStandardMaterial({ 
+                    color: typeof color === 'string' ? new THREE.Color(color) : color,
+                    metalness: 0.7, 
+                    roughness: 0.3 
+                });
                 const mesh = new THREE.Mesh(geo, mat);
                 mesh.castShadow = true;
                 mesh.receiveShadow = true;
@@ -385,7 +398,6 @@
                 const { length, width, height, type, color } = state;
                 const metalColor = new THREE.Color(color);
                 
-                // Posts
                 const step = 2.5;
                 const count = Math.ceil(length / step) + 1;
                 for (let i = 0; i < count; i++) {
@@ -393,25 +405,24 @@
                     const post1 = this.createBox(0.08, height, 0.08, metalColor);
                     post1.position.set(-width / 2, height / 2, z);
                     this.group.add(post1);
+                    
                     const post2 = this.createBox(0.08, height, 0.08, metalColor);
                     post2.position.set(width / 2, height / 2, z);
                     this.group.add(post2);
                 }
                 
-                // Roof panels
                 const panelCount = Math.ceil(length / 1.5);
                 for (let i = 0; i < panelCount; i++) {
                     const z1 = -length / 2 + i * 1.5;
-                    const roof = this.createBox(width, 0.05, 1.5, 0xc0c0c0);
+                    const roof = this.createBox(width + 0.1, 0.05, 1.5, 0xc0c0c0);
                     roof.position.set(0, height - 0.1, z1);
                     this.group.add(roof);
                 }
                 
-                // Trusses
                 const trusses = Math.ceil(length / 1.2) + 1;
                 for (let i = 0; i < trusses; i++) {
                     const z = -length / 2 + i * 1.2;
-                    const beam = this.createBox(width * 0.9, 0.08, 0.04, 0x404040);
+                    const beam = this.createBox(width * 0.9, 0.08, 0.04, 0x505050);
                     beam.position.set(0, height - 0.3, z);
                     this.group.add(beam);
                 }
@@ -422,7 +433,6 @@
                 const { length, height, color } = state;
                 const metalColor = new THREE.Color(color);
                 
-                // Posts
                 const step = 2.5;
                 const count = Math.ceil(length / step) + 1;
                 for (let i = 0; i < count; i++) {
@@ -432,15 +442,14 @@
                     this.group.add(post);
                 }
                 
-                // Rails
-                const rail1 = this.createBox(length * 0.95, 0.04, 0.08, 0x404040);
+                const rail1 = this.createBox(length * 0.95, 0.04, 0.08, 0x505050);
                 rail1.position.set(0, height - 0.15, 0);
                 this.group.add(rail1);
-                const rail2 = this.createBox(length * 0.95, 0.04, 0.08, 0x404040);
+                
+                const rail2 = this.createBox(length * 0.95, 0.04, 0.08, 0x505050);
                 rail2.position.set(0, height / 2, 0);
                 this.group.add(rail2);
                 
-                // Filling
                 const fillCount = Math.ceil(length / 2.5);
                 for (let i = 0; i < fillCount; i++) {
                     const x = -length / 2 + i * 2.5;
@@ -464,13 +473,19 @@
             }
         }
 
-        let canopyScene = new Scene3D('three-canvas', 'canopy');
-        let fenceScene = new Scene3D('fence-three-canvas', 'fence');
+        let canopyScene, fenceScene;
         let currentMode = 'canopy';
+
+        window.addEventListener('load', () => {
+            canopyScene = new Scene3D('three-canvas', 'canopy');
+            fenceScene = new Scene3D('fence-three-canvas', 'fence');
+            calc();
+        });
 
         function bindInputs(rangeId, numberId) {
             const r = document.getElementById(rangeId);
             const n = document.getElementById(numberId);
+            if (!r || !n) return;
             r.addEventListener('input', () => { n.value = r.value; calc(); });
             n.addEventListener('input', () => { r.value = n.value; calc(); });
         }
@@ -488,6 +503,7 @@
 
         document.querySelectorAll('#canopyType button').forEach(b => b.addEventListener('click', function() { updateSeg('canopyType', this); calc(); }));
         document.querySelectorAll('#config button').forEach(b => b.addEventListener('click', function() { updateSeg('config', this); calc(); }));
+
         document.querySelectorAll('.tabs button').forEach(b => b.addEventListener('click', function() {
             currentMode = this.dataset.mode;
             document.querySelectorAll('.tabs button').forEach(x => x.classList.remove('active'));
@@ -499,51 +515,48 @@
         }));
 
         ['post', 'roof', 'color', 'delivery', 'mount', 'fMaterial', 'fPost', 'fColor', 'fDelivery', 'fMount'].forEach(id => {
-            document.getElementById(id)?.addEventListener('change', calc);
+            const elem = document.getElementById(id);
+            if (elem) elem.addEventListener('change', calc);
         });
 
-        document.getElementById('btn-3d')?.addEventListener('click', () => canopyScene.resetView('3d'));
-        document.getElementById('btn-top')?.addEventListener('click', () => canopyScene.resetView('top'));
-        document.getElementById('btn-front')?.addEventListener('click', () => canopyScene.resetView('front'));
-        document.getElementById('btn-side')?.addEventListener('click', () => canopyScene.resetView('side'));
-        document.getElementById('btn-iso')?.addEventListener('click', () => canopyScene.resetView('iso'));
-        document.getElementById('btn-reset')?.addEventListener('click', () => canopyScene.resetView('3d'));
+        document.getElementById('btn-3d')?.addEventListener('click', () => canopyScene?.resetView('3d'));
+        document.getElementById('btn-top')?.addEventListener('click', () => canopyScene?.resetView('top'));
+        document.getElementById('btn-front')?.addEventListener('click', () => canopyScene?.resetView('front'));
+        document.getElementById('btn-side')?.addEventListener('click', () => canopyScene?.resetView('side'));
+        document.getElementById('btn-iso')?.addEventListener('click', () => canopyScene?.resetView('iso'));
+        document.getElementById('btn-reset')?.addEventListener('click', () => canopyScene?.resetView('3d'));
 
-        document.getElementById('fbtn-3d')?.addEventListener('click', () => fenceScene.resetView('3d'));
-        document.getElementById('fbtn-top')?.addEventListener('click', () => fenceScene.resetView('top'));
-        document.getElementById('fbtn-front')?.addEventListener('click', () => fenceScene.resetView('front'));
-        document.getElementById('fbtn-iso')?.addEventListener('click', () => fenceScene.resetView('iso'));
-        document.getElementById('fbtn-reset')?.addEventListener('click', () => fenceScene.resetView('3d'));
+        document.getElementById('fbtn-3d')?.addEventListener('click', () => fenceScene?.resetView('3d'));
+        document.getElementById('fbtn-top')?.addEventListener('click', () => fenceScene?.resetView('top'));
+        document.getElementById('fbtn-front')?.addEventListener('click', () => fenceScene?.resetView('front'));
+        document.getElementById('fbtn-iso')?.addEventListener('click', () => fenceScene?.resetView('iso'));
+        document.getElementById('fbtn-reset')?.addEventListener('click', () => fenceScene?.resetView('3d'));
 
         function calc() {
+            if (!canopyScene || !fenceScene) return;
             if (currentMode === 'canopy') calcCanopy();
             else calcFence();
         }
 
         function calcCanopy() {
-            const length = parseFloat(document.getElementById('cw').value);
-            const width = parseFloat(document.getElementById('cl').value);
-            const height = parseFloat(document.getElementById('ch').value);
-            const config = document.querySelector('#config button.active').dataset.value;
-            const type = document.querySelector('#canopyType button.active').dataset.value;
-            const post = document.getElementById('post').value;
-            const roof = document.getElementById('roof').value;
-            const color = document.getElementById('color').value;
+            const length = parseFloat(document.getElementById('cw').value) || 6;
+            const width = parseFloat(document.getElementById('cl').value) || 5;
+            const height = parseFloat(document.getElementById('ch').value) || 2.5;
+            const type = document.querySelector('#canopyType button.active')?.dataset.value || 'arch';
+            const post = document.getElementById('post').value || '60x60x3';
+            const roof = document.getElementById('roof').value || 'ns20-50';
+            const color = document.getElementById('color').value || '#505050';
             const delivery = document.getElementById('delivery').checked;
             const mount = document.getElementById('mount').checked;
 
             const area = length * width;
             const base = area * PRICES.CANOPY;
-            const step = 2.5;
-            const posts = Math.ceil(length / step) + 1;
+            const posts = Math.ceil(length / 2.5) + 1;
             const trusses = Math.ceil(length / 1.2) + 1;
             const rows = Math.max(1, Math.ceil(length / 0.4));
             
-            let deliveryCost = 0;
-            if (delivery) deliveryCost = Math.max(3500, Math.min(15000, 3000 + area * 80));
-            let mountCost = 0;
-            if (mount) mountCost = Math.max(12000, area * 700);
-
+            let deliveryCost = delivery ? Math.max(3500, Math.min(15000, 3000 + area * 80)) : 0;
+            let mountCost = mount ? Math.max(12000, area * 700) : 0;
             const total = base + deliveryCost + mountCost;
 
             document.getElementById('areaOut').textContent = formatNum(area) + ' м²';
@@ -561,15 +574,15 @@
             ];
             document.getElementById('canopySpec').innerHTML = spec.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('');
 
-            canopyScene.updateCanopy({ length, width, height, type, color });
+            if (canopyScene) canopyScene.updateCanopy({ length, width, height, type, color });
         }
 
         function calcFence() {
-            const length = parseFloat(document.getElementById('fl').value);
-            const height = parseFloat(document.getElementById('fh').value);
-            const material = document.getElementById('fMaterial').value;
-            const post = document.getElementById('fPost').value;
-            const color = document.getElementById('fColor').value;
+            const length = parseFloat(document.getElementById('fl').value) || 20;
+            const height = parseFloat(document.getElementById('fh').value) || 1.8;
+            const material = document.getElementById('fMaterial').value || 'ns20';
+            const post = document.getElementById('fPost').value || '60x60x3';
+            const color = document.getElementById('fColor').value || '#505050';
             const delivery = document.getElementById('fDelivery').checked;
             const mount = document.getElementById('fMount').checked;
 
@@ -577,11 +590,8 @@
             const posts = Math.ceil(length / 2.5) + 1;
             const crossbars = Math.ceil(length / 2.5);
 
-            let deliveryCost = 0;
-            if (delivery) deliveryCost = Math.max(3000, Math.min(12000, 2500 + length * 60));
-            let mountCost = 0;
-            if (mount) mountCost = Math.max(8000, length * 450);
-
+            let deliveryCost = delivery ? Math.max(3000, Math.min(12000, 2500 + length * 60)) : 0;
+            let mountCost = mount ? Math.max(8000, length * 450) : 0;
             const total = base + deliveryCost + mountCost;
 
             document.getElementById('fLengthOut').textContent = formatNum(length) + ' пог. м';
@@ -597,10 +607,8 @@
             ];
             document.getElementById('fenceSpec').innerHTML = spec.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('');
 
-            fenceScene.updateFence({ length, height, color });
+            if (fenceScene) fenceScene.updateFence({ length, height, color });
         }
-
-        calc();
     </script>
 </body>
 </html>
