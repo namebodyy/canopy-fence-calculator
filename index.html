@@ -53,6 +53,8 @@
             height: fit-content;
             position: sticky;
             top: 20px;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         .tabs {
@@ -227,15 +229,16 @@
         }
 
         .canvas-wrapper {
-            background: #f0f4f8;
-            border: 1px solid #ddd;
+            background: linear-gradient(135deg, #e8eef7 0%, #f5f8fc 100%);
+            border: 2px solid #ddd;
             border-radius: 8px;
             overflow: hidden;
-            height: 500px;
+            height: 600px;
             position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
         }
 
         .canvas-wrapper canvas {
@@ -248,12 +251,13 @@
             position: absolute;
             top: 12px;
             left: 12px;
-            background: rgba(255,255,255,0.95);
+            background: rgba(255,255,255,0.98);
             padding: 8px 12px;
             font-size: 11px;
             border-radius: 4px;
             color: #666;
             z-index: 10;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .view-buttons {
@@ -417,22 +421,22 @@
                         <div class="form-group">
                             <label>Длина навеса (м)</label>
                             <div class="range-container">
-                                <input type="range" id="canopyLength" min="2" max="30" step="0.5" value="6">
-                                <input type="number" id="canopyLengthNum" min="2" max="30" step="0.5" value="6">
+                                <input type="range" id="canopyLength" min="2" max="30" step="0.5" value="8">
+                                <input type="number" id="canopyLengthNum" min="2" max="30" step="0.5" value="8">
                             </div>
                         </div>
                         <div class="form-group">
                             <label>Ширина навеса (м)</label>
                             <div class="range-container">
-                                <input type="range" id="canopyWidth" min="2" max="15" step="0.5" value="5">
-                                <input type="number" id="canopyWidthNum" min="2" max="15" step="0.5" value="5">
+                                <input type="range" id="canopyWidth" min="2" max="15" step="0.5" value="6">
+                                <input type="number" id="canopyWidthNum" min="2" max="15" step="0.5" value="6">
                             </div>
                         </div>
                         <div class="form-group">
                             <label>Высота (м)</label>
                             <div class="range-container">
-                                <input type="range" id="canopyHeight" min="2" max="5" step="0.1" value="2.5">
-                                <input type="number" id="canopyHeightNum" min="2" max="5" step="0.1" value="2.5">
+                                <input type="range" id="canopyHeight" min="2" max="5" step="0.1" value="2.8">
+                                <input type="number" id="canopyHeightNum" min="2" max="5" step="0.1" value="2.8">
                             </div>
                         </div>
                     </div>
@@ -441,22 +445,22 @@
                         <div class="section-title">Кровельный материал</div>
                         <div class="form-group">
                             <select id="roofMaterial">
-                                <option value="ns8-04">Профнастил НС-8 (0.4 мм) - 378₽/м²</option>
-                                <option value="ns8-045">Профнастил НС-8 (0.45 мм) - 391₽/м²</option>
-                                <option value="ns20-045">Профнастил НС-20 (0.45 мм) - 416₽/м²</option>
-                                <option value="ns20-05" selected>Профнастил НС-20 (0.5 мм) - 419₽/м²</option>
-                                <option value="ns20-055">Профнастил НС-20 (0.55 мм) - 469₽/м²</option>
-                                <option value="ns20-065">Профнастил НС-20 (0.65 мм) - 444₽/м²</option>
-                                <option value="ns20-07">Профнастил НС-20 (0.7 мм) - 600₽/м²</option>
-                                <option value="ns21-045">Профнастил НС-21 (0.45 мм) - 447₽/м²</option>
-                                <option value="ns21-05">Профнастил НС-21 (0.5 мм) - 486₽/м²</option>
-                                <option value="ns21-055">Профнастил НС-21 (0.55 мм) - 514₽/м²</option>
-                                <option value="ns21-07">Профнастил НС-21 (0.7 мм) - 690₽/м²</option>
-                                <option value="ns35-05">Профнастил НС-35 (0.5 мм) - 475₽/м²</option>
-                                <option value="ns35-055">Профнастил НС-35 (0.55 мм) - 509₽/м²</option>
-                                <option value="ns35-07">Профнастил НС-35 (0.7 мм) - 665₽/м²</option>
-                                <option value="monterey-05">Монтерей Супер (0.5 мм) - 546₽/м²</option>
-                                <option value="monterey-055">Монтерей Супер (0.55 мм) - 664₽/м²</option>
+                                <option value="ns8-04">Профнастил НС-8 (0.4) - 378₽/м²</option>
+                                <option value="ns8-045">Профнастил НС-8 (0.45) - 391₽/м²</option>
+                                <option value="ns20-045">Профнастил НС-20 (0.45) - 416₽/м²</option>
+                                <option value="ns20-05" selected>Профнастил НС-20 (0.5) - 419₽/м²</option>
+                                <option value="ns20-055">Профнастил НС-20 (0.55) - 469₽/м²</option>
+                                <option value="ns20-065">Профнастил НС-20 (0.65) - 444₽/м²</option>
+                                <option value="ns20-07">Профнастил НС-20 (0.7) - 600₽/м²</option>
+                                <option value="ns21-045">Профнастил НС-21 (0.45) - 447₽/м²</option>
+                                <option value="ns21-05">Профнастил НС-21 (0.5) - 486₽/м²</option>
+                                <option value="ns21-055">Профнастил НС-21 (0.55) - 514₽/м²</option>
+                                <option value="ns21-07">Профнастил НС-21 (0.7) - 690₽/м²</option>
+                                <option value="ns35-05">Профнастил НС-35 (0.5) - 475₽/м²</option>
+                                <option value="ns35-055">Профнастил НС-35 (0.55) - 509₽/м²</option>
+                                <option value="ns35-07">Профнастил НС-35 (0.7) - 665₽/м²</option>
+                                <option value="monterey-05">Монтерей (0.5) - 546₽/м²</option>
+                                <option value="monterey-055">Монтерей (0.55) - 664₽/м²</option>
                             </select>
                         </div>
                     </div>
@@ -465,22 +469,22 @@
                         <div class="section-title">Профиль столбов</div>
                         <div class="form-group">
                             <select id="postProfile">
-                                <option value="60x20x15">Труба 60×20×1.5 мм - 225₽/м</option>
-                                <option value="60x40x2" selected>Труба 60×40×2 мм - 307₽/м</option>
-                                <option value="60x40x3">Труба 60×40×3 мм - 325₽/м</option>
-                                <option value="40x20x15">Труба 40×20×1.5 мм - 155₽/м</option>
+                                <option value="60x20x15">Труба 60×20×1.5 - 225₽/м</option>
+                                <option value="60x40x2" selected>Труба 60×40×2 - 307₽/м</option>
+                                <option value="60x40x3">Труба 60×40×3 - 325₽/м</option>
+                                <option value="40x20x15">Труба 40×20×1.5 - 155₽/м</option>
                             </select>
                         </div>
                     </div>
 
                     <div class="section">
-                        <div class="section-title">Цвет покрытия (RAL)</div>
+                        <div class="section-title">Цвет покрытия</div>
                         <div class="form-group">
                             <select id="color">
                                 <option value="#505050">7024 - Графит серый</option>
                                 <option value="#1a1a1a">9005 - Черный</option>
                                 <option value="#6b4423">8017 - Коричневый</option>
-                                <option value="#2d5016">6005 - Зеленый мох</option>
+                                <option value="#2d5016">6005 - Зеленый</option>
                                 <option value="#003da5">5005 - Синий</option>
                             </select>
                         </div>
@@ -501,11 +505,11 @@
                         <div class="section-title">Тип штакета</div>
                         <div class="form-group">
                             <select id="fenceType">
-                                <option value="mini">Мини М-образный (75 мм) - 48₽/пог.м</option>
-                                <option value="pesnya">Песня П-образный (100 мм) - 54₽/пог.м</option>
-                                <option value="madeeira" selected>Мадейра полукруглый (110 мм) - 66₽/пог.м</option>
-                                <option value="stan">Стан П-образный (120 мм) - 74₽/пог.м</option>
-                                <option value="premium">Премиум полукруглый (131 мм) - 74₽/пог.м</option>
+                                <option value="mini">Мини М-образный (75 мм) - 48₽/м</option>
+                                <option value="pesnya">Песня П-образный (100 мм) - 54₽/м</option>
+                                <option value="madeeira" selected>Мадейра (110 мм) - 66₽/м</option>
+                                <option value="stan">Стан П-образный (120 мм) - 74₽/м</option>
+                                <option value="premium">Премиум (131 мм) - 74₽/м</option>
                             </select>
                         </div>
                     </div>
@@ -532,9 +536,9 @@
                         <div class="section-title">Профиль столбов</div>
                         <div class="form-group">
                             <select id="fencePostProfile">
-                                <option value="60x40x2">Труба 60×40×2 мм - 307₽/м</option>
-                                <option value="60x40x3" selected>Труба 60×40×3 мм - 325₽/м</option>
-                                <option value="40x20x15">Труба 40×20×1.5 мм - 155₽/м</option>
+                                <option value="60x40x2">Труба 60×40×2 - 307₽/м</option>
+                                <option value="60x40x3" selected>Труба 60×40×3 - 325₽/м</option>
+                                <option value="40x20x15">Труба 40×20×1.5 - 155₽/м</option>
                             </select>
                         </div>
                     </div>
@@ -577,7 +581,7 @@
                 <div class="result-box">
                     <div class="result-line">
                         <span id="paramLabel">Площадь навеса:</span>
-                        <span id="paramValue">30 м²</span>
+                        <span id="paramValue">48 м²</span>
                     </div>
                     <div class="result-line">
                         <span id="baseLabel">Стоимость конструкции:</span>
@@ -613,7 +617,7 @@
                             <tr><td colspan="3" style="text-align:center; padding: 20px;">Загрузка...</td></tr>
                         </tbody>
                     </table>
-                    <div class="note">Количество материала рассчитывается автоматически на основе габаритов конструкции.</div>
+                    <div class="note">Количество материала рассчитывается автоматически на основе габаритов.</div>
                 </div>
             </div>
         </div>
@@ -629,43 +633,18 @@
     <script>
         // ЦЕНЫ МАТЕРИАЛОВ
         const MATERIALS = {
-            ns8_04: 378,
-            ns8_045: 391,
-            ns20_045: 416,
-            ns20_05: 419,
-            ns20_055: 469,
-            ns20_065: 444,
-            ns20_07: 600,
-            ns21_045: 447,
-            ns21_05: 486,
-            ns21_055: 514,
-            ns21_07: 690,
-            ns35_05: 475,
-            ns35_055: 509,
-            ns35_07: 665,
-            monterey_05: 546,
-            monterey_055: 664
+            ns8_04: 378, ns8_045: 391,
+            ns20_045: 416, ns20_05: 419, ns20_055: 469, ns20_065: 444, ns20_07: 600,
+            ns21_045: 447, ns21_05: 486, ns21_055: 514, ns21_07: 690,
+            ns35_05: 475, ns35_055: 509, ns35_07: 665,
+            monterey_05: 546, monterey_055: 664
         };
 
-        const TUBES = {
-            '60x20x15': 225,
-            '60x40x2': 307,
-            '60x40x3': 325,
-            '40x20x15': 155
-        };
+        const TUBES = { '60x20x15': 225, '60x40x2': 307, '60x40x3': 325, '40x20x15': 155 };
+        const FENCE_PRICES = { mini: 48, pesnya: 54, madeeira: 66, stan: 74, premium: 74 };
 
-        const FENCE_PRICES = {
-            mini: 48,
-            pesnya: 54,
-            madeeira: 66,
-            stan: 74,
-            premium: 74
-        };
-
-        const DELIVERY_RATE = 3000;
-        const DELIVERY_PER_M2 = 80;
-        const MOUNT_CANOPY = 7000;
-        const MOUNT_FENCE = 1200;
+        const DELIVERY_RATE = 3000, DELIVERY_PER_M2 = 80;
+        const MOUNT_CANOPY = 7000, MOUNT_FENCE = 1200;
 
         let scene, camera, renderer, controls, group;
         let currentTab = 'canopy';
@@ -676,52 +655,66 @@
             const container = canvas.parentElement;
 
             scene = new THREE.Scene();
-            scene.background = new THREE.Color(0xf0f4f8);
-            scene.fog = new THREE.Fog(0xf0f4f8, 100, 1000);
+            scene.background = new THREE.Color(0xe8eef7);
+            scene.fog = new THREE.Fog(0xe8eef7, 200, 500);
 
-            camera = new THREE.PerspectiveCamera(
-                60,
-                container.clientWidth / container.clientHeight,
-                0.1,
-                2000
-            );
-            camera.position.set(20, 12, 20);
-            camera.lookAt(0, 0, 0);
+            camera = new THREE.PerspectiveCamera(55, container.clientWidth / container.clientHeight, 0.1, 2000);
+            camera.position.set(25, 18, 25);
+            camera.lookAt(0, 3, 0);
 
-            renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+            renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, precision: 'highp' });
             renderer.setSize(container.clientWidth, container.clientHeight);
-            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             renderer.shadowMap.enabled = true;
             renderer.shadowMap.type = THREE.PCFShadowShadowMap;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 1;
 
-            // Освещение
-            const ambLight = new THREE.AmbientLight(0xffffff, 0.6);
+            // Освещение (реалистичное)
+            const ambLight = new THREE.AmbientLight(0xffffff, 0.5);
             scene.add(ambLight);
 
-            const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
-            dirLight.position.set(30, 40, 30);
+            const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
+            dirLight.position.set(50, 60, 40);
             dirLight.castShadow = true;
             dirLight.shadow.mapSize.width = 4096;
             dirLight.shadow.mapSize.height = 4096;
-            dirLight.shadow.camera.far = 200;
-            dirLight.shadow.camera.left = -100;
-            dirLight.shadow.camera.right = 100;
-            dirLight.shadow.camera.top = 100;
-            dirLight.shadow.camera.bottom = -100;
+            dirLight.shadow.camera.far = 300;
+            dirLight.shadow.camera.left = -150;
+            dirLight.shadow.camera.right = 150;
+            dirLight.shadow.camera.top = 150;
+            dirLight.shadow.camera.bottom = -150;
+            dirLight.shadow.bias = -0.0001;
             scene.add(dirLight);
 
-            // Земля
-            const groundGeo = new THREE.PlaneGeometry(300, 300);
-            const groundMat = new THREE.MeshStandardMaterial({ 
-                color: 0xb0b0b0,
-                metalness: 0.1,
-                roughness: 0.8
+            const skyLight = new THREE.DirectionalLight(0x87ceeb, 0.3);
+            skyLight.position.set(-30, 50, -30);
+            scene.add(skyLight);
+
+            // Земля (реалистичная)
+            const groundGeo = new THREE.PlaneGeometry(500, 500);
+            const groundMat = new THREE.MeshStandardMaterial({
+                color: 0x888888,
+                metalness: 0,
+                roughness: 0.9,
+                map: createCheckerTexture()
             });
             const ground = new THREE.Mesh(groundGeo, groundMat);
             ground.rotation.x = -Math.PI / 2;
             ground.receiveShadow = true;
             ground.position.y = -3;
             scene.add(ground);
+
+            // Небо (light box)
+            const skyGeo = new THREE.SphereGeometry(400, 32, 32);
+            const skyMat = new THREE.MeshStandardMaterial({
+                color: 0xe8eef7,
+                emissive: 0xffffff,
+                emissiveIntensity: 0.3,
+                side: THREE.BackSide
+            });
+            const sky = new THREE.Mesh(skyGeo, skyMat);
+            scene.add(sky);
 
             // Группа объектов
             group = new THREE.Group();
@@ -730,11 +723,12 @@
             // Контролы
             controls = new OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
-            controls.dampingFactor = 0.05;
-            controls.minDistance = 15;
-            controls.maxDistance = 150;
+            controls.dampingFactor = 0.04;
+            controls.minDistance = 20;
+            controls.maxDistance = 200;
             controls.autoRotate = true;
-            controls.autoRotateSpeed = 3;
+            controls.autoRotateSpeed = 2;
+            controls.enablePan = true;
 
             // Анимация
             function animate() {
@@ -753,23 +747,49 @@
             });
         }
 
+        // Текстура земли
+        function createCheckerTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 64;
+            canvas.height = 64;
+            const ctx = canvas.getContext('2d');
+            for (let i = 0; i < 8; i++) {
+                for (let j = 0; j < 8; j++) {
+                    ctx.fillStyle = (i + j) % 2 === 0 ? '#999999' : '#777777';
+                    ctx.fillRect(i * 8, j * 8, 8, 8);
+                }
+            }
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.repeat.set(20, 20);
+            texture.wrapS = THREE.RepeatWrapping;
+            texture.wrapT = THREE.RepeatWrapping;
+            return texture;
+        }
+
         // Очистка сцены
         function clearScene() {
             while (group.children.length) {
                 const child = group.children[0];
                 if (child.geometry) child.geometry.dispose();
-                if (child.material) child.material.dispose();
+                if (child.material) {
+                    if (Array.isArray(child.material)) {
+                        child.material.forEach(m => m.dispose());
+                    } else {
+                        child.material.dispose();
+                    }
+                }
                 group.remove(child);
             }
         }
 
-        // Создание трубы
+        // Создание трубы (цилиндр)
         function createTube(radius, height, color, x, y, z) {
-            const geo = new THREE.CylinderGeometry(radius, radius, height, 8);
+            const geo = new THREE.CylinderGeometry(radius, radius, height, 12);
             const mat = new THREE.MeshStandardMaterial({
                 color: typeof color === 'string' ? new THREE.Color(color) : color,
-                metalness: 0.9,
-                roughness: 0.2
+                metalness: 0.95,
+                roughness: 0.15,
+                emissive: 0x000000
             });
             const mesh = new THREE.Mesh(geo, mat);
             mesh.castShadow = true;
@@ -778,13 +798,14 @@
             return mesh;
         }
 
-        // Создание куба (балка)
+        // Создание балки (куб)
         function createBeam(width, height, depth, color, x, y, z) {
             const geo = new THREE.BoxGeometry(width, height, depth);
             const mat = new THREE.MeshStandardMaterial({
                 color: typeof color === 'string' ? new THREE.Color(color) : color,
-                metalness: 0.85,
-                roughness: 0.25
+                metalness: 0.92,
+                roughness: 0.2,
+                emissive: 0x000000
             });
             const mesh = new THREE.Mesh(geo, mat);
             mesh.castShadow = true;
@@ -793,87 +814,159 @@
             return mesh;
         }
 
-        // Рисование навеса (АРОЧНЫЙ)
+        // НАВЕС АРОЧНЫЙ (реалистичный)
         function drawCanopyArch(params) {
             clearScene();
             const { length, width, height, color } = params;
             const metalColor = new THREE.Color(color);
 
-            // Столбы
-            const postStep = 2;
+            // СТОЛБЫ (угловые и промежуточные)
+            const postStep = 2.5;
             const postsCount = Math.ceil(length / postStep) + 1;
+            
             for (let i = 0; i < postsCount; i++) {
                 const z = -length / 2 + i * postStep;
-                const post1 = createTube(0.06, height, metalColor, -width / 2 - 0.1, 0, z);
+                
+                // Левый столб
+                const post1 = createTube(0.085, height, metalColor, -width / 2 - 0.1, 0, z);
                 group.add(post1);
 
-                const post2 = createTube(0.06, height, metalColor, width / 2 + 0.1, 0, z);
+                // Правый столб
+                const post2 = createTube(0.085, height, metalColor, width / 2 + 0.1, 0, z);
                 group.add(post2);
+
+                // Усиливающие распорки
+                if (i < postsCount - 1) {
+                    const crossbar = createBeam(0.06, 0.06, postStep - 0.2, 0x505050, 0, height * 0.3, z + postStep / 2);
+                    group.add(crossbar);
+                }
             }
 
-            // Арочная кровля (волнообразная)
-            const segments = Math.ceil(length / 1) * 4;
-            for (let i = 0; i < segments - 1; i++) {
-                const z1 = -length / 2 + (i / segments) * length;
-                const z2 = -length / 2 + ((i + 1) / segments) * length;
+            // АРОЧНАЯ КРОВЛЯ (волнистая геометрия)
+            const segments = 50;
+            const segmentLength = length / segments;
+            
+            for (let i = 0; i < segments; i++) {
+                const z1 = -length / 2 + i * segmentLength;
+                const z2 = -length / 2 + (i + 1) * segmentLength;
                 
-                const arcProgress1 = i / segments;
-                const arcProgress2 = (i + 1) / segments;
+                const progress1 = i / segments;
+                const progress2 = (i + 1) / segments;
                 
-                const y1 = height - 0.2 + Math.sin(arcProgress1 * Math.PI) * 0.3;
-                const y2 = height - 0.2 + Math.sin(arcProgress2 * Math.PI) * 0.3;
+                // Арка (синусоидальная кривая)
+                const archHeight = 0.5 * Math.sin(progress1 * Math.PI);
+                const archHeight2 = 0.5 * Math.sin(progress2 * Math.PI);
+                
+                const y1 = height - 0.1 + archHeight;
+                const y2 = height - 0.1 + archHeight2;
 
-                const roof = createBeam(width, 0.08, 0.5, 0xc0c0c0, 0, (y1 + y2) / 2, (z1 + z2) / 2);
-                roof.rotation.z = Math.atan2(y2 - y1, 0.5);
+                // Волнистая кровля
+                const roof = createBeam(width + 0.3, 0.08, segmentLength + 0.1, 0xb8b8b8, 0, (y1 + y2) / 2, (z1 + z2) / 2);
+                roof.rotation.x = Math.atan2(y2 - y1, segmentLength) * 0.3;
                 group.add(roof);
+
+                // Боковая волнистость
+                if (i % 3 === 0) {
+                    const side1 = createBeam(0.1, 0.06, segmentLength * 0.8, 0x606060, -width / 2 - 0.2, y1 * 0.9, z1);
+                    const side2 = createBeam(0.1, 0.06, segmentLength * 0.8, 0x606060, width / 2 + 0.2, y1 * 0.9, z1);
+                    group.add(side1);
+                    group.add(side2);
+                }
             }
 
-            // Фермы (поперечные балки)
-            const ferms = Math.ceil(length / 1.5) + 1;
-            for (let i = 0; i < ferms; i++) {
+            // ФЕРМЫ (поперечные рамы усиления)
+            const ferms = Math.ceil(length / 1.5);
+            for (let i = 0; i <= ferms; i++) {
                 const z = -length / 2 + i * 1.5;
-                const beam = createBeam(width * 0.9, 0.06, 0.04, 0x505050, 0, height - 0.15, z);
-                group.add(beam);
+                
+                // Основная ферма
+                const fermBeam = createBeam(width * 0.95, 0.08, 0.06, 0x404040, 0, height - 0.2, z);
+                group.add(fermBeam);
+
+                // Укосины (диагональные связи)
+                if (i % 2 === 0) {
+                    const diagonal = createBeam(0.06, width * 0.7, 0.06, 0x505050, 0, height * 0.6, z);
+                    diagonal.rotation.z = Math.PI / 6;
+                    group.add(diagonal);
+                }
             }
 
-            // Боковые рамы (усиление)
-            for (let i = 0; i < postsCount; i++) {
+            // БОКОВЫЕ РАМЫ (портальные)
+            for (let i = 0; i < postsCount; i += 2) {
                 const z = -length / 2 + i * postStep;
-                const sideBeam1 = createBeam(0.04, height * 0.6, 0.08, 0x404040, -width / 2 - 0.1, height * 0.5, z);
-                const sideBeam2 = createBeam(0.04, height * 0.6, 0.08, 0x404040, width / 2 + 0.1, height * 0.5, z);
-                group.add(sideBeam1);
-                group.add(sideBeam2);
+
+                // Верхняя рама
+                const topRail = createBeam(0.08, width * 0.9, 0.08, 0x505050, 0, height - 0.15, z);
+                group.add(topRail);
+
+                // Средняя рама
+                const midRail = createBeam(0.08, width * 0.85, 0.08, 0x505050, 0, height / 2, z);
+                group.add(midRail);
+            }
+
+            // ДОПОЛНИТЕЛЬНЫЕ СВЯЗИ
+            for (let i = 1; i < postsCount - 1; i++) {
+                const z = -length / 2 + i * postStep;
+                
+                // Перекрестные связи
+                const link1 = createBeam(0.05, 0.05, width * 0.8, metalColor, 0, height * 0.25, z);
+                group.add(link1);
             }
         }
 
-        // Рисование забора
+        // ЗАБОР (реалистичный)
         function drawFence(params) {
             clearScene();
             const { length, height, color } = params;
             const metalColor = new THREE.Color(color);
 
-            // Столбы
-            const postStep = 2;
+            // СТОЛБЫ
+            const postStep = 2.5;
             const postsCount = Math.ceil(length / postStep) + 1;
+            
             for (let i = 0; i < postsCount; i++) {
                 const x = -length / 2 + i * postStep;
-                const post = createTube(0.05, height, metalColor, x, 0, 0);
+                const post = createTube(0.075, height, metalColor, x, 0, 0);
                 group.add(post);
+
+                // Усиливающие подкосы
+                if (i < postsCount - 1) {
+                    const brace = createBeam(0.05, 0.05, postStep * 0.8, 0x505050, x + postStep / 2, height * 0.25, 0);
+                    brace.rotation.z = Math.PI / 8;
+                    group.add(brace);
+                }
             }
 
-            // Горизонтальные перекладины
-            const rail1 = createBeam(length * 0.95, 0.04, 0.06, 0x505050, 0, height - 0.2, 0);
+            // ГОРИЗОНТАЛЬНЫЕ ПЕРЕКЛАДИНЫ
+            const rail1 = createBeam(length * 0.98, 0.05, 0.08, 0x505050, 0, height - 0.2, 0);
             group.add(rail1);
 
-            const rail2 = createBeam(length * 0.95, 0.04, 0.06, 0x505050, 0, height / 2, 0);
+            const rail2 = createBeam(length * 0.98, 0.05, 0.08, 0x505050, 0, height * 0.5, 0);
             group.add(rail2);
 
-            // Штакет (заполнение)
-            const fillCount = Math.ceil(length / 0.15);
+            const rail3 = createBeam(length * 0.98, 0.05, 0.08, 0x505050, 0, height * 0.15, 0);
+            group.add(rail3);
+
+            // ШТАКЕТ (реалистичный)
+            const fillSpacing = 0.12;
+            const fillCount = Math.ceil(length / fillSpacing);
+            
             for (let i = 0; i < fillCount; i++) {
-                const x = -length / 2 + i * 0.15;
-                const fill = createBeam(0.1, height - 0.3, 0.015, metalColor, x, height / 2, 0.05);
+                const x = -length / 2 + i * fillSpacing;
+                const fill = createBeam(0.08, height - 0.3, 0.018, metalColor, x, height / 2, 0.06);
                 group.add(fill);
+
+                // Волнистость штакета
+                if (i % 5 === 0) {
+                    fill.position.z += 0.02 * Math.sin(i * 0.5);
+                }
+            }
+
+            // УСИЛИВАЮЩИЕ ВЕРХНИЕ СВЯЗИ
+            for (let i = 0; i < postsCount - 1; i++) {
+                const x = -length / 2 + i * postStep + postStep / 2;
+                const topLink = createBeam(postStep * 0.8, 0.05, 0.05, 0x404040, x, height - 0.1, 0);
+                group.add(topLink);
             }
         }
 
@@ -884,24 +977,24 @@
             
             switch (view) {
                 case 'top':
-                    pos = new THREE.Vector3(0, 50, 0.1);
+                    pos = new THREE.Vector3(0, 80, 0.1);
                     target = new THREE.Vector3(0, 0, 0);
                     break;
                 case 'front':
-                    pos = new THREE.Vector3(0, 8, 35);
-                    target = new THREE.Vector3(0, 3, 0);
+                    pos = new THREE.Vector3(0, 12, 50);
+                    target = new THREE.Vector3(0, 4, 0);
                     break;
                 case 'side':
-                    pos = new THREE.Vector3(35, 8, 0);
-                    target = new THREE.Vector3(0, 3, 0);
+                    pos = new THREE.Vector3(50, 12, 0);
+                    target = new THREE.Vector3(0, 4, 0);
                     break;
                 case 'iso':
-                    pos = new THREE.Vector3(20, 15, 20);
-                    target = new THREE.Vector3(0, 3, 0);
+                    pos = new THREE.Vector3(30, 20, 30);
+                    target = new THREE.Vector3(0, 4, 0);
                     break;
                 default:
                     controls.autoRotate = true;
-                    pos = new THREE.Vector3(20, 12, 20);
+                    pos = new THREE.Vector3(25, 18, 25);
                     target = new THREE.Vector3(0, 3, 0);
             }
             
@@ -944,14 +1037,13 @@
         });
 
         // Кнопки вида
-        document.getElementById('view3d')?.addEventListener('click', () => changeView('3d'));
-        document.getElementById('viewTop')?.addEventListener('click', () => changeView('top'));
-        document.getElementById('viewFront')?.addEventListener('click', () => changeView('front'));
-        document.getElementById('viewSide')?.addEventListener('click', () => changeView('side'));
-        document.getElementById('viewIso')?.addEventListener('click', () => changeView('iso'));
+        ['view3d', 'viewTop', 'viewFront', 'viewSide', 'viewIso'].forEach((id, i) => {
+            const views = ['3d', 'top', 'front', 'side', 'iso'];
+            document.getElementById(id)?.addEventListener('click', () => changeView(views[i]));
+        });
 
-        // Обновление при изменении
-        ['typeGroup', 'roofMaterial', 'postProfile', 'color', 'delivery', 'mount',
+        // События
+        ['roofMaterial', 'postProfile', 'color', 'delivery', 'mount',
          'fenceType', 'fencePostProfile', 'fenceColor', 'fenceDelivery', 'fenceMount'].forEach(id => {
             const elem = document.getElementById(id);
             if (elem) elem.addEventListener('change', calculate);
@@ -973,28 +1065,22 @@
             
             const materialSelect = document.getElementById('roofMaterial').value;
             const materialPrice = MATERIALS[materialSelect.replace(/-/g, '_')];
-            
             const postSelect = document.getElementById('postProfile').value;
             const tubePrice = TUBES[postSelect];
-            
             const color = document.getElementById('color').value;
             const delivery = document.getElementById('delivery').checked;
             const mount = document.getElementById('mount').checked;
 
             const area = length * width;
-            
-            // Стоимость материала (профнастил)
             const roofCost = area * materialPrice;
             
-            // Стоимость труб
-            const postStep = 2;
+            const postStep = 2.5;
             const postsCount = Math.ceil(length / postStep) + 1;
-            const postsLength = postsCount * 2 * height; // 2 столба на каждый ряд
-            const tubesLength = postsLength + length * 4; // плюс связи и усиления
-            const tubeCost = tubesLength * tubePrice;
+            const postsLength = postsCount * 2 * height + length * 5;
+            const tubeCost = postsLength * tubePrice;
             
             const base = roofCost + tubeCost;
-            const deliveryCost = delivery ? DELIVERY_RATE + Math.max(0, area * DELIVERY_PER_M2) : 0;
+            const deliveryCost = delivery ? DELIVERY_RATE + area * DELIVERY_PER_M2 : 0;
             const mountCost = mount ? area * MOUNT_CANOPY : 0;
             const total = base + deliveryCost + mountCost;
 
@@ -1007,13 +1093,12 @@
             document.getElementById('totalPrice').textContent = Math.round(total).toLocaleString('ru-RU') + '₽';
             document.getElementById('totalSum').textContent = Math.round(total).toLocaleString('ru-RU') + '₽';
 
-            // Спецификация
             const trusses = Math.ceil(length / 1.5) + 1;
             document.getElementById('specTable').innerHTML = `
                 <tr><td>Профильная труба (столбы)</td><td>${postsCount * 2}</td><td>шт</td></tr>
                 <tr><td>Фермы / несущие рамы</td><td>${trusses}</td><td>шт</td></tr>
                 <tr><td>Кровельный материал</td><td>${(area * 1.05).toFixed(1)}</td><td>м²</td></tr>
-                <tr><td>Трубы профильные</td><td>${tubesLength.toFixed(1)}</td><td>пог.м</td></tr>
+                <tr><td>Трубы профильные</td><td>${postsLength.toFixed(1)}</td><td>пог.м</td></tr>
             `;
 
             drawCanopyArch({ length, width, height, color });
@@ -1023,24 +1108,18 @@
         function calculateFence() {
             const length = parseFloat(document.getElementById('fenceLength').value);
             const height = parseFloat(document.getElementById('fenceHeight').value);
-            
             const fenceSelect = document.getElementById('fenceType').value;
             const fencePrice = FENCE_PRICES[fenceSelect];
-            
             const postSelect = document.getElementById('fencePostProfile').value;
             const tubePrice = TUBES[postSelect];
-            
             const color = document.getElementById('fenceColor').value;
             const delivery = document.getElementById('fenceDelivery').checked;
             const mount = document.getElementById('fenceMount').checked;
 
-            // Стоимость штакета
             const fenceCost = length * fencePrice;
-            
-            // Стоимость столбов и связей
-            const postStep = 2;
+            const postStep = 2.5;
             const postsCount = Math.ceil(length / postStep) + 1;
-            const tubesLength = postsCount * height + length * 2;
+            const tubesLength = postsCount * height + length * 3;
             const tubeCost = tubesLength * tubePrice;
             
             const base = fenceCost + tubeCost;
@@ -1057,23 +1136,20 @@
             document.getElementById('totalPrice').textContent = Math.round(total).toLocaleString('ru-RU') + '₽';
             document.getElementById('totalSum').textContent = Math.round(total).toLocaleString('ru-RU') + '₽';
 
-            // Спецификация
             document.getElementById('specTable').innerHTML = `
                 <tr><td>Столбы (профильная труба)</td><td>${postsCount}</td><td>шт</td></tr>
-                <tr><td>Горизонтальные перекладины</td><td>${Math.ceil(length / postStep) * 2}</td><td>ряд</td></tr>
+                <tr><td>Горизонтальные перекладины</td><td>${Math.ceil(length / postStep) * 3}</td><td>ряд</td></tr>
                 <tr><td>Штакет</td><td>${length.toFixed(1)}</td><td>пог.м</td></tr>
             `;
 
             drawFence({ length, height, color });
         }
 
-        // РАСЧЕТ
         function calculate() {
             if (currentTab === 'canopy') calculateCanopy();
             else calculateFence();
         }
 
-        // ЗАПУСК
         window.addEventListener('load', () => {
             initThreeJS();
             calculate();
