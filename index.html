@@ -3,57 +3,387 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Калькулятор навесов и заборов - Расчет стоимости</title>
+    <title>Калькулятор навесов и заборов - mosnavesi.ru</title>
     <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html, body { font: 13px/1.5 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #222; background: #f5f5f5; }
-.wrapper { max-width: 1400px; margin: 0 auto; background: #fff; }
-.header { background: #17649a; color: #fff; padding: 20px; }
-.header h1 { font-size: 24px; margin-bottom: 5px; }
-.header p { font-size: 12px; opacity: 0.9; }
-.container { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; padding: 30px; }
-.left-panel { }
-.right-panel { }
-.tabs { display: flex; gap: 10px; margin-bottom: 20px; }
-.tab-btn { padding: 10px 20px; background: #e8e8e8; border: none; cursor: pointer; font-size: 12px; border-radius: 3px; transition: all 0.3s; }
-.tab-btn.active { background: #17649a; color: #fff; }
-.section { margin-bottom: 25px; }
-.section-title { font-size: 14px; font-weight: 600; color: #222; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 2px solid #17649a; }
-.btn-group { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
-.btn-group button { padding: 8px 14px; border: 1px solid #17649a; background: #fff; color: #17649a; cursor: pointer; font-size: 11px; border-radius: 3px; transition: all 0.2s; }
-.btn-group button.active { background: #17649a; color: #fff; }
-.btn-group button:hover { background: #f0f6fb; }
-.form-group { margin-bottom: 15px; }
-.form-group label { display: block; font-size: 12px; color: #555; margin-bottom: 6px; font-weight: 500; }
-.range-container { display: flex; gap: 10px; align-items: center; }
-.range-container input[type="range"] { flex: 1; }
-.range-container input[type="number"] { width: 70px; padding: 6px; border: 1px solid #ddd; border-radius: 3px; font-size: 12px; }
-select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px; font-size: 12px; background: #fff; cursor: pointer; }
-.checkbox-group { display: flex; gap: 15px; }
-.checkbox-group label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12px; }
-.checkbox-group input { cursor: pointer; }
-.canvas-wrapper { background: #f0f4f8; border: 1px solid #ddd; border-radius: 4px; overflow: hidden; height: 480px; position: relative; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
-.canvas-wrapper canvas { width: 100%; height: 100%; display: block; }
-.canvas-label { position: absolute; top: 10px; left: 10px; background: rgba(255,255,255,0.9); padding: 6px 10px; font-size: 11px; border-radius: 3px; color: #666; }
-.view-buttons { display: flex; gap: 6px; margin-bottom: 15px; flex-wrap: wrap; }
-.view-buttons button { padding: 6px 12px; border: 1px solid #ddd; background: #fff; cursor: pointer; font-size: 11px; border-radius: 3px; transition: all 0.2s; }
-.view-buttons button:hover { background: #f0f6fb; border-color: #17649a; color: #17649a; }
-.result-box { background: #f9f9f9; border: 1px solid #ddd; border-radius: 4px; padding: 15px; margin-bottom: 15px; }
-.result-line { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #e8e8e8; font-size: 12px; }
-.result-line:last-child { border-bottom: none; }
-.result-line.total { font-size: 16px; font-weight: bold; color: #17649a; padding: 12px 0; }
-.total-sum { font-size: 24px; color: #17649a; font-weight: bold; margin: 15px 0; }
-.spec-table { width: 100%; font-size: 11px; border-collapse: collapse; }
-.spec-table th, .spec-table td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
-.spec-table th { background: #f0f0f0; font-weight: 600; }
-.spec-table tr:hover { background: #f9f9f9; }
-.note { font-size: 11px; color: #777; background: #f5f5f5; padding: 8px 10px; border-radius: 3px; margin-top: 10px; }
-.hidden { display: none !important; }
-.footer { background: #f5f5f5; padding: 20px; border-top: 1px solid #ddd; text-align: center; font-size: 11px; color: #777; }
-@media (max-width: 1024px) {
-    .container { grid-template-columns: 1fr; }
-    .canvas-wrapper { height: 400px; }
-}
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html, body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        .wrapper {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: #fff;
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e5a96 0%, #2d7cb8 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 30px;
+            padding: 30px;
+            align-items: start;
+        }
+
+        .left-panel {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: #999;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            color: #1e5a96;
+            border-bottom-color: #1e5a96;
+        }
+
+        .tab-btn:hover {
+            color: #1e5a96;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1e5a96;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .range-container {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .range-container input[type="range"] {
+            flex: 1;
+            height: 5px;
+            border-radius: 3px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .range-container input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #1e5a96;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .range-container input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #1e5a96;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .range-container input[type="number"] {
+            width: 70px;
+            padding: 6px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 12px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .btn-group button {
+            flex: 1;
+            min-width: 80px;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            background: white;
+            color: #666;
+            cursor: pointer;
+            font-size: 11px;
+            border-radius: 4px;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .btn-group button.active {
+            background: #1e5a96;
+            color: white;
+            border-color: #1e5a96;
+        }
+
+        .btn-group button:hover {
+            border-color: #1e5a96;
+            color: #1e5a96;
+        }
+
+        .checkbox-group {
+            display: flex;
+            gap: 15px;
+        }
+
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .checkbox-group input {
+            cursor: pointer;
+        }
+
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .canvas-wrapper {
+            background: #f0f4f8;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            height: 500px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .canvas-wrapper canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .canvas-label {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(255,255,255,0.95);
+            padding: 8px 12px;
+            font-size: 11px;
+            border-radius: 4px;
+            color: #666;
+            z-index: 10;
+        }
+
+        .view-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .view-buttons button {
+            padding: 8px 14px;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            font-size: 11px;
+            border-radius: 4px;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .view-buttons button:hover {
+            background: #1e5a96;
+            color: white;
+            border-color: #1e5a96;
+        }
+
+        .result-box {
+            background: linear-gradient(135deg, #f8f9fa 0%, #eef2f7 100%);
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .result-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+            font-size: 12px;
+        }
+
+        .result-line:last-child {
+            border-bottom: none;
+        }
+
+        .result-line.total {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1e5a96;
+            padding: 15px 0;
+        }
+
+        .total-sum {
+            font-size: 36px;
+            font-weight: 700;
+            color: #1e5a96;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .spec-table {
+            width: 100%;
+            font-size: 11px;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .spec-table th, .spec-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .spec-table th {
+            background: #f0f0f0;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .spec-table tr:hover {
+            background: #f9f9f9;
+        }
+
+        .note {
+            font-size: 11px;
+            color: #777;
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 12px;
+            border-left: 3px solid #1e5a96;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .footer {
+            background: #f5f5f5;
+            padding: 20px;
+            border-top: 1px solid #ddd;
+            text-align: center;
+            font-size: 11px;
+            color: #777;
+        }
+
+        @media (max-width: 1200px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .left-panel {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .canvas-wrapper {
+                height: 350px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -72,14 +402,13 @@ select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px; 
                 </div>
 
                 <!-- НАВЕС -->
-                <div id="canopy-tab" class="tab-content">
+                <div id="canopy-tab" class="tab-content active">
                     <div class="section">
                         <div class="section-title">Тип навеса</div>
                         <div class="btn-group" id="typeGroup">
                             <button class="active" data-type="arch">Арочный</button>
                             <button data-type="gable">Двухскатный</button>
                             <button data-type="single">Односкатный</button>
-                            <button data-type="semi">Полуарочный</button>
                         </div>
                     </div>
 
@@ -109,36 +438,44 @@ select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px; 
                     </div>
 
                     <div class="section">
-                        <div class="section-title">Конфигурация</div>
-                        <select id="config">
-                            <option value="standard">Стандартная (шаг ферм 1.5м)</option>
-                            <option value="reinforced">Усиленная (шаг ферм 1.25м)</option>
-                            <option value="premium">Премиум (шаг ферм 1.0м)</option>
-                        </select>
+                        <div class="section-title">Кровельный материал</div>
+                        <div class="form-group">
+                            <select id="roofMaterial">
+                                <option value="ns8-04">Профнастил НС-8 (0.4 мм) - 378₽/м²</option>
+                                <option value="ns8-045">Профнастил НС-8 (0.45 мм) - 391₽/м²</option>
+                                <option value="ns20-045">Профнастил НС-20 (0.45 мм) - 416₽/м²</option>
+                                <option value="ns20-05" selected>Профнастил НС-20 (0.5 мм) - 419₽/м²</option>
+                                <option value="ns20-055">Профнастил НС-20 (0.55 мм) - 469₽/м²</option>
+                                <option value="ns20-065">Профнастил НС-20 (0.65 мм) - 444₽/м²</option>
+                                <option value="ns20-07">Профнастил НС-20 (0.7 мм) - 600₽/м²</option>
+                                <option value="ns21-045">Профнастил НС-21 (0.45 мм) - 447₽/м²</option>
+                                <option value="ns21-05">Профнастил НС-21 (0.5 мм) - 486₽/м²</option>
+                                <option value="ns21-055">Профнастил НС-21 (0.55 мм) - 514₽/м²</option>
+                                <option value="ns21-07">Профнастил НС-21 (0.7 мм) - 690₽/м²</option>
+                                <option value="ns35-05">Профнастил НС-35 (0.5 мм) - 475₽/м²</option>
+                                <option value="ns35-055">Профнастил НС-35 (0.55 мм) - 509₽/м²</option>
+                                <option value="ns35-07">Профнастил НС-35 (0.7 мм) - 665₽/м²</option>
+                                <option value="monterey-05">Монтерей Супер (0.5 мм) - 546₽/м²</option>
+                                <option value="monterey-055">Монтерей Супер (0.55 мм) - 664₽/м²</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="section">
-                        <div class="section-title">Профиль и материал</div>
+                        <div class="section-title">Профиль столбов</div>
                         <div class="form-group">
-                            <label>Столбы</label>
                             <select id="postProfile">
-                                <option value="60x60x2">Труба 60×60×2 мм</option>
-                                <option value="60x60x3" selected>Труба 60×60×3 мм</option>
-                                <option value="80x80x3">Труба 80×80×3 мм</option>
-                                <option value="100x100x3">Труба 100×100×3 мм</option>
+                                <option value="60x20x15">Труба 60×20×1.5 мм - 225₽/м</option>
+                                <option value="60x40x2" selected>Труба 60×40×2 мм - 307₽/м</option>
+                                <option value="60x40x3">Труба 60×40×3 мм - 325₽/м</option>
+                                <option value="40x20x15">Труба 40×20×1.5 мм - 155₽/м</option>
                             </select>
                         </div>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-title">Цвет покрытия (RAL)</div>
                         <div class="form-group">
-                            <label>Кровельный материал</label>
-                            <select id="roofMaterial">
-                                <option value="ns20">Профнастил НС-20 (0.5 мм) - 7000₽/м²</option>
-                                <option value="ns35">Профнастил НС-35 (0.5 мм) - 7500₽/м²</option>
-                                <option value="mc">Металлический каркас - 5000₽/м²</option>
-                                <option value="polik">Поликарбонат - 8000₽/м²</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Цвет покрытия (RAL)</label>
                             <select id="color">
                                 <option value="#505050">7024 - Графит серый</option>
                                 <option value="#1a1a1a">9005 - Черный</option>
@@ -159,14 +496,18 @@ select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px; 
                 </div>
 
                 <!-- ЗАБОР -->
-                <div id="fence-tab" class="tab-content hidden">
+                <div id="fence-tab" class="tab-content">
                     <div class="section">
-                        <div class="section-title">Тип забора</div>
-                        <select id="fenceType">
-                            <option value="profnastil">Профнастил</option>
-                            <option value="doska">Деревянный штакет</option>
-                            <option value="setka">Рабица</option>
-                        </select>
+                        <div class="section-title">Тип штакета</div>
+                        <div class="form-group">
+                            <select id="fenceType">
+                                <option value="mini">Мини М-образный (75 мм) - 48₽/пог.м</option>
+                                <option value="pesnya">Песня П-образный (100 мм) - 54₽/пог.м</option>
+                                <option value="madeeira" selected>Мадейра полукруглый (110 мм) - 66₽/пог.м</option>
+                                <option value="stan">Стан П-образный (120 мм) - 74₽/пог.м</option>
+                                <option value="premium">Премиум полукруглый (131 мм) - 74₽/пог.м</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="section">
@@ -189,20 +530,24 @@ select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px; 
 
                     <div class="section">
                         <div class="section-title">Профиль столбов</div>
-                        <select id="fencePostProfile">
-                            <option value="60x60x2">Труба 60×60×2 мм</option>
-                            <option value="60x60x3" selected>Труба 60×60×3 мм</option>
-                            <option value="80x80x3">Труба 80×80×3 мм</option>
-                        </select>
+                        <div class="form-group">
+                            <select id="fencePostProfile">
+                                <option value="60x40x2">Труба 60×40×2 мм - 307₽/м</option>
+                                <option value="60x40x3" selected>Труба 60×40×3 мм - 325₽/м</option>
+                                <option value="40x20x15">Труба 40×20×1.5 мм - 155₽/м</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="section">
                         <div class="section-title">Цвет</div>
-                        <select id="fenceColor">
-                            <option value="#505050">7024 - Графит серый</option>
-                            <option value="#1a1a1a">9005 - Черный</option>
-                            <option value="#6b4423">8017 - Коричневый</option>
-                        </select>
+                        <div class="form-group">
+                            <select id="fenceColor">
+                                <option value="#505050">7024 - Графит серый</option>
+                                <option value="#1a1a1a">9005 - Черный</option>
+                                <option value="#6b4423">8017 - Коричневый</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="section">
@@ -217,7 +562,7 @@ select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px; 
             <!-- ПРАВАЯ ПАНЕЛЬ -->
             <div class="right-panel">
                 <div id="canvas-container" class="canvas-wrapper">
-                    <div class="canvas-label">3D Модель (вращение: ЛКМ, зум: колесо)</div>
+                    <div class="canvas-label">3D Модель (ЛКМ: вращение, Колесо: зум)</div>
                     <canvas id="threejsCanvas"></canvas>
                 </div>
 
@@ -236,7 +581,7 @@ select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px; 
                     </div>
                     <div class="result-line">
                         <span id="baseLabel">Стоимость конструкции:</span>
-                        <span id="basePrice">210 000₽</span>
+                        <span id="basePrice">0₽</span>
                     </div>
                     <div class="result-line">
                         <span>Доставка:</span>
@@ -248,11 +593,11 @@ select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px; 
                     </div>
                     <div class="result-line total">
                         <span>ИТОГО:</span>
-                        <span id="totalPrice">210 000₽</span>
+                        <span id="totalPrice">0₽</span>
                     </div>
                 </div>
 
-                <div class="total-sum" id="totalSum">210 000₽</div>
+                <div class="total-sum" id="totalSum">0₽</div>
 
                 <div class="section">
                     <div class="section-title">Спецификация</div>
@@ -274,7 +619,7 @@ select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px; 
         </div>
 
         <div class="footer">
-            <p>© 2024 Калькулятор навесов и заборов. Расчет стоимости выполнен на основе текущих цен на материалы и работы.</p>
+            <p>© 2024 Калькулятор навесов и заборов. Расчет стоимости выполнен на основе текущих цен на материалы и услуги.</p>
         </div>
     </div>
 
@@ -282,61 +627,100 @@ select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px; 
     <script src="https://cdn.jsdelivr.net/npm/three@r128/examples/js/controls/OrbitControls.js"></script>
 
     <script>
-        // КОНФИГУРАЦИЯ
-        const CONFIG = {
-            CANOPY_BASE: 7000,
-            FENCE_BASE: 1200,
-            materials: {
-                ns20: 7000,
-                ns35: 7500,
-                mc: 5000,
-                polik: 8000
-            }
+        // ЦЕНЫ МАТЕРИАЛОВ
+        const MATERIALS = {
+            ns8_04: 378,
+            ns8_045: 391,
+            ns20_045: 416,
+            ns20_05: 419,
+            ns20_055: 469,
+            ns20_065: 444,
+            ns20_07: 600,
+            ns21_045: 447,
+            ns21_05: 486,
+            ns21_055: 514,
+            ns21_07: 690,
+            ns35_05: 475,
+            ns35_055: 509,
+            ns35_07: 665,
+            monterey_05: 546,
+            monterey_055: 664
         };
+
+        const TUBES = {
+            '60x20x15': 225,
+            '60x40x2': 307,
+            '60x40x3': 325,
+            '40x20x15': 155
+        };
+
+        const FENCE_PRICES = {
+            mini: 48,
+            pesnya: 54,
+            madeeira: 66,
+            stan: 74,
+            premium: 74
+        };
+
+        const DELIVERY_RATE = 3000;
+        const DELIVERY_PER_M2 = 80;
+        const MOUNT_CANOPY = 7000;
+        const MOUNT_FENCE = 1200;
 
         let scene, camera, renderer, controls, group;
         let currentTab = 'canopy';
 
-        // Инициализация Three.js
+        // ИНИЦИАЛИЗАЦИЯ THREE.JS
         function initThreeJS() {
             const canvas = document.getElementById('threejsCanvas');
             const container = canvas.parentElement;
-            
+
             scene = new THREE.Scene();
             scene.background = new THREE.Color(0xf0f4f8);
+            scene.fog = new THREE.Fog(0xf0f4f8, 100, 1000);
 
             camera = new THREE.PerspectiveCamera(
-                75,
+                60,
                 container.clientWidth / container.clientHeight,
                 0.1,
-                1000
+                2000
             );
-            camera.position.set(15, 10, 15);
+            camera.position.set(20, 12, 20);
             camera.lookAt(0, 0, 0);
 
             renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
             renderer.setSize(container.clientWidth, container.clientHeight);
             renderer.setPixelRatio(window.devicePixelRatio);
             renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFShadowShadowMap;
 
             // Освещение
-            const ambLight = new THREE.AmbientLight(0xffffff, 0.7);
+            const ambLight = new THREE.AmbientLight(0xffffff, 0.6);
             scene.add(ambLight);
 
-            const dirLight = new THREE.DirectionalLight(0xffffff, 0.9);
-            dirLight.position.set(20, 30, 20);
+            const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
+            dirLight.position.set(30, 40, 30);
             dirLight.castShadow = true;
-            dirLight.shadow.mapSize.width = 2048;
-            dirLight.shadow.mapSize.height = 2048;
+            dirLight.shadow.mapSize.width = 4096;
+            dirLight.shadow.mapSize.height = 4096;
+            dirLight.shadow.camera.far = 200;
+            dirLight.shadow.camera.left = -100;
+            dirLight.shadow.camera.right = 100;
+            dirLight.shadow.camera.top = 100;
+            dirLight.shadow.camera.bottom = -100;
             scene.add(dirLight);
 
             // Земля
-            const groundGeo = new THREE.PlaneGeometry(150, 150);
-            const groundMat = new THREE.MeshStandardMaterial({ color: 0xcccccc });
+            const groundGeo = new THREE.PlaneGeometry(300, 300);
+            const groundMat = new THREE.MeshStandardMaterial({ 
+                color: 0xb0b0b0,
+                metalness: 0.1,
+                roughness: 0.8
+            });
             const ground = new THREE.Mesh(groundGeo, groundMat);
             ground.rotation.x = -Math.PI / 2;
             ground.receiveShadow = true;
-            ground.position.y = -2;
+            ground.position.y = -3;
             scene.add(ground);
 
             // Группа объектов
@@ -347,8 +731,10 @@ select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px; 
             controls = new OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
             controls.dampingFactor = 0.05;
-            controls.minDistance = 10;
-            controls.maxDistance = 80;
+            controls.minDistance = 15;
+            controls.maxDistance = 150;
+            controls.autoRotate = true;
+            controls.autoRotateSpeed = 3;
 
             // Анимация
             function animate() {
@@ -371,62 +757,92 @@ select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px; 
         function clearScene() {
             while (group.children.length) {
                 const child = group.children[0];
-                child.geometry?.dispose();
-                child.material?.dispose();
+                if (child.geometry) child.geometry.dispose();
+                if (child.material) child.material.dispose();
                 group.remove(child);
             }
         }
 
-        // Создание куба
-        function createBox(w, h, d, color) {
-            const geo = new THREE.BoxGeometry(w, h, d);
+        // Создание трубы
+        function createTube(radius, height, color, x, y, z) {
+            const geo = new THREE.CylinderGeometry(radius, radius, height, 8);
             const mat = new THREE.MeshStandardMaterial({
                 color: typeof color === 'string' ? new THREE.Color(color) : color,
-                metalness: 0.8,
+                metalness: 0.9,
                 roughness: 0.2
             });
             const mesh = new THREE.Mesh(geo, mat);
             mesh.castShadow = true;
             mesh.receiveShadow = true;
+            mesh.position.set(x, y + height / 2, z);
             return mesh;
         }
 
-        // Рисование навеса
-        function drawCanopy(params) {
+        // Создание куба (балка)
+        function createBeam(width, height, depth, color, x, y, z) {
+            const geo = new THREE.BoxGeometry(width, height, depth);
+            const mat = new THREE.MeshStandardMaterial({
+                color: typeof color === 'string' ? new THREE.Color(color) : color,
+                metalness: 0.85,
+                roughness: 0.25
+            });
+            const mesh = new THREE.Mesh(geo, mat);
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
+            mesh.position.set(x, y, z);
+            return mesh;
+        }
+
+        // Рисование навеса (АРОЧНЫЙ)
+        function drawCanopyArch(params) {
             clearScene();
-            const { length, width, height, color, type } = params;
+            const { length, width, height, color } = params;
             const metalColor = new THREE.Color(color);
 
             // Столбы
-            const postStep = 2.5;
+            const postStep = 2;
             const postsCount = Math.ceil(length / postStep) + 1;
             for (let i = 0; i < postsCount; i++) {
                 const z = -length / 2 + i * postStep;
-                const post1 = createBox(0.1, height, 0.1, metalColor);
-                post1.position.set(-width / 2, height / 2, z);
+                const post1 = createTube(0.06, height, metalColor, -width / 2 - 0.1, 0, z);
                 group.add(post1);
 
-                const post2 = createBox(0.1, height, 0.1, metalColor);
-                post2.position.set(width / 2, height / 2, z);
+                const post2 = createTube(0.06, height, metalColor, width / 2 + 0.1, 0, z);
                 group.add(post2);
             }
 
-            // Кровля
-            const panelCount = Math.ceil(length / 2);
-            for (let i = 0; i < panelCount; i++) {
-                const z = -length / 2 + i * 2;
-                const roof = createBox(width + 0.2, 0.05, 2, 0xc0c0c0);
-                roof.position.set(0, height - 0.05, z);
+            // Арочная кровля (волнообразная)
+            const segments = Math.ceil(length / 1) * 4;
+            for (let i = 0; i < segments - 1; i++) {
+                const z1 = -length / 2 + (i / segments) * length;
+                const z2 = -length / 2 + ((i + 1) / segments) * length;
+                
+                const arcProgress1 = i / segments;
+                const arcProgress2 = (i + 1) / segments;
+                
+                const y1 = height - 0.2 + Math.sin(arcProgress1 * Math.PI) * 0.3;
+                const y2 = height - 0.2 + Math.sin(arcProgress2 * Math.PI) * 0.3;
+
+                const roof = createBeam(width, 0.08, 0.5, 0xc0c0c0, 0, (y1 + y2) / 2, (z1 + z2) / 2);
+                roof.rotation.z = Math.atan2(y2 - y1, 0.5);
                 group.add(roof);
             }
 
-            // Фермы
+            // Фермы (поперечные балки)
             const ferms = Math.ceil(length / 1.5) + 1;
             for (let i = 0; i < ferms; i++) {
                 const z = -length / 2 + i * 1.5;
-                const beam = createBox(width * 0.85, 0.1, 0.05, 0x505050);
-                beam.position.set(0, height - 0.25, z);
+                const beam = createBeam(width * 0.9, 0.06, 0.04, 0x505050, 0, height - 0.15, z);
                 group.add(beam);
+            }
+
+            // Боковые рамы (усиление)
+            for (let i = 0; i < postsCount; i++) {
+                const z = -length / 2 + i * postStep;
+                const sideBeam1 = createBeam(0.04, height * 0.6, 0.08, 0x404040, -width / 2 - 0.1, height * 0.5, z);
+                const sideBeam2 = createBeam(0.04, height * 0.6, 0.08, 0x404040, width / 2 + 0.1, height * 0.5, z);
+                group.add(sideBeam1);
+                group.add(sideBeam2);
             }
         }
 
@@ -437,46 +853,60 @@ select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px; 
             const metalColor = new THREE.Color(color);
 
             // Столбы
-            const postStep = 2.5;
+            const postStep = 2;
             const postsCount = Math.ceil(length / postStep) + 1;
             for (let i = 0; i < postsCount; i++) {
                 const x = -length / 2 + i * postStep;
-                const post = createBox(0.1, height, 0.1, metalColor);
-                post.position.set(x, height / 2, 0);
+                const post = createTube(0.05, height, metalColor, x, 0, 0);
                 group.add(post);
             }
 
             // Горизонтальные перекладины
-            const rail1 = createBox(length * 0.95, 0.05, 0.1, 0x505050);
-            rail1.position.set(0, height - 0.15, 0);
+            const rail1 = createBeam(length * 0.95, 0.04, 0.06, 0x505050, 0, height - 0.2, 0);
             group.add(rail1);
 
-            const rail2 = createBox(length * 0.95, 0.05, 0.1, 0x505050);
-            rail2.position.set(0, height / 2, 0);
+            const rail2 = createBeam(length * 0.95, 0.04, 0.06, 0x505050, 0, height / 2, 0);
             group.add(rail2);
 
-            // Заполнение
-            const fillCount = Math.ceil(length / 2.5);
+            // Штакет (заполнение)
+            const fillCount = Math.ceil(length / 0.15);
             for (let i = 0; i < fillCount; i++) {
-                const x = -length / 2 + i * 2.5;
-                const fill = createBox(2.4, height - 0.3, 0.03, metalColor);
-                fill.position.set(x, height / 2, 0.08);
+                const x = -length / 2 + i * 0.15;
+                const fill = createBeam(0.1, height - 0.3, 0.015, metalColor, x, height / 2, 0.05);
                 group.add(fill);
             }
         }
 
         // Смена вида
         function changeView(view) {
-            let pos;
+            controls.autoRotate = false;
+            let pos, target;
+            
             switch (view) {
-                case 'top': pos = new THREE.Vector3(0, 25, 0.1); break;
-                case 'front': pos = new THREE.Vector3(0, 5, 20); break;
-                case 'side': pos = new THREE.Vector3(20, 5, 0); break;
-                case 'iso': pos = new THREE.Vector3(15, 12, 15); break;
-                default: pos = new THREE.Vector3(15, 10, 15);
+                case 'top':
+                    pos = new THREE.Vector3(0, 50, 0.1);
+                    target = new THREE.Vector3(0, 0, 0);
+                    break;
+                case 'front':
+                    pos = new THREE.Vector3(0, 8, 35);
+                    target = new THREE.Vector3(0, 3, 0);
+                    break;
+                case 'side':
+                    pos = new THREE.Vector3(35, 8, 0);
+                    target = new THREE.Vector3(0, 3, 0);
+                    break;
+                case 'iso':
+                    pos = new THREE.Vector3(20, 15, 20);
+                    target = new THREE.Vector3(0, 3, 0);
+                    break;
+                default:
+                    controls.autoRotate = true;
+                    pos = new THREE.Vector3(20, 12, 20);
+                    target = new THREE.Vector3(0, 3, 0);
             }
+            
             camera.position.copy(pos);
-            camera.lookAt(0, 3, 0);
+            camera.lookAt(target);
         }
 
         // Синхронизация инпутов
@@ -506,9 +936,9 @@ select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px; 
             btn.addEventListener('click', (e) => {
                 currentTab = e.target.dataset.tab;
                 document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
                 e.target.classList.add('active');
-                document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
-                document.getElementById(currentTab + '-tab').classList.remove('hidden');
+                document.getElementById(currentTab + '-tab').classList.add('active');
                 calculate();
             });
         });
@@ -521,7 +951,7 @@ select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px; 
         document.getElementById('viewIso')?.addEventListener('click', () => changeView('iso'));
 
         // Обновление при изменении
-        ['typeGroup', 'config', 'postProfile', 'roofMaterial', 'color', 'delivery', 'mount',
+        ['typeGroup', 'roofMaterial', 'postProfile', 'color', 'delivery', 'mount',
          'fenceType', 'fencePostProfile', 'fenceColor', 'fenceDelivery', 'fenceMount'].forEach(id => {
             const elem = document.getElementById(id);
             if (elem) elem.addEventListener('change', calculate);
@@ -535,82 +965,115 @@ select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px; 
             });
         });
 
-        // Расчет
-        function calculate() {
-            if (currentTab === 'canopy') calculateCanopy();
-            else calculateFence();
-        }
-
+        // РАСЧЕТ НАВЕСА
         function calculateCanopy() {
             const length = parseFloat(document.getElementById('canopyLength').value);
             const width = parseFloat(document.getElementById('canopyWidth').value);
             const height = parseFloat(document.getElementById('canopyHeight').value);
-            const material = document.getElementById('roofMaterial').value;
+            
+            const materialSelect = document.getElementById('roofMaterial').value;
+            const materialPrice = MATERIALS[materialSelect.replace(/-/g, '_')];
+            
+            const postSelect = document.getElementById('postProfile').value;
+            const tubePrice = TUBES[postSelect];
+            
             const color = document.getElementById('color').value;
             const delivery = document.getElementById('delivery').checked;
             const mount = document.getElementById('mount').checked;
 
             const area = length * width;
-            const base = area * CONFIG.materials[material];
-            const deliveryCost = delivery ? Math.max(3500, Math.min(15000, 3000 + area * 80)) : 0;
-            const mountCost = mount ? Math.max(12000, area * 700) : 0;
+            
+            // Стоимость материала (профнастил)
+            const roofCost = area * materialPrice;
+            
+            // Стоимость труб
+            const postStep = 2;
+            const postsCount = Math.ceil(length / postStep) + 1;
+            const postsLength = postsCount * 2 * height; // 2 столба на каждый ряд
+            const tubesLength = postsLength + length * 4; // плюс связи и усиления
+            const tubeCost = tubesLength * tubePrice;
+            
+            const base = roofCost + tubeCost;
+            const deliveryCost = delivery ? DELIVERY_RATE + Math.max(0, area * DELIVERY_PER_M2) : 0;
+            const mountCost = mount ? area * MOUNT_CANOPY : 0;
             const total = base + deliveryCost + mountCost;
 
             document.getElementById('paramLabel').textContent = 'Площадь навеса:';
             document.getElementById('paramValue').textContent = area.toFixed(1) + ' м²';
             document.getElementById('baseLabel').textContent = 'Стоимость конструкции:';
-            document.getElementById('basePrice').textContent = Math.round(base).toLocaleString() + '₽';
-            document.getElementById('deliveryPrice').textContent = Math.round(deliveryCost).toLocaleString() + '₽';
-            document.getElementById('mountPrice').textContent = Math.round(mountCost).toLocaleString() + '₽';
-            document.getElementById('totalPrice').textContent = Math.round(total).toLocaleString() + '₽';
-            document.getElementById('totalSum').textContent = Math.round(total).toLocaleString() + '₽';
+            document.getElementById('basePrice').textContent = Math.round(base).toLocaleString('ru-RU') + '₽';
+            document.getElementById('deliveryPrice').textContent = Math.round(deliveryCost).toLocaleString('ru-RU') + '₽';
+            document.getElementById('mountPrice').textContent = Math.round(mountCost).toLocaleString('ru-RU') + '₽';
+            document.getElementById('totalPrice').textContent = Math.round(total).toLocaleString('ru-RU') + '₽';
+            document.getElementById('totalSum').textContent = Math.round(total).toLocaleString('ru-RU') + '₽';
 
             // Спецификация
-            const posts = Math.ceil(length / 2.5) + 1;
             const trusses = Math.ceil(length / 1.5) + 1;
             document.getElementById('specTable').innerHTML = `
-                <tr><td>Профильная труба (столбы)</td><td>${posts}</td><td>шт</td></tr>
+                <tr><td>Профильная труба (столбы)</td><td>${postsCount * 2}</td><td>шт</td></tr>
                 <tr><td>Фермы / несущие рамы</td><td>${trusses}</td><td>шт</td></tr>
                 <tr><td>Кровельный материал</td><td>${(area * 1.05).toFixed(1)}</td><td>м²</td></tr>
-                <tr><td>Обрешетка</td><td>${Math.ceil(length / 0.5)}</td><td>пог.м</td></tr>
+                <tr><td>Трубы профильные</td><td>${tubesLength.toFixed(1)}</td><td>пог.м</td></tr>
             `;
 
-            drawCanopy({ length, width, height, color, type: 'arch' });
+            drawCanopyArch({ length, width, height, color });
         }
 
+        // РАСЧЕТ ЗАБОРА
         function calculateFence() {
             const length = parseFloat(document.getElementById('fenceLength').value);
             const height = parseFloat(document.getElementById('fenceHeight').value);
+            
+            const fenceSelect = document.getElementById('fenceType').value;
+            const fencePrice = FENCE_PRICES[fenceSelect];
+            
+            const postSelect = document.getElementById('fencePostProfile').value;
+            const tubePrice = TUBES[postSelect];
+            
             const color = document.getElementById('fenceColor').value;
             const delivery = document.getElementById('fenceDelivery').checked;
             const mount = document.getElementById('fenceMount').checked;
 
-            const base = length * CONFIG.FENCE_BASE;
-            const deliveryCost = delivery ? Math.max(3000, Math.min(12000, 2500 + length * 60)) : 0;
-            const mountCost = mount ? Math.max(8000, length * 450) : 0;
+            // Стоимость штакета
+            const fenceCost = length * fencePrice;
+            
+            // Стоимость столбов и связей
+            const postStep = 2;
+            const postsCount = Math.ceil(length / postStep) + 1;
+            const tubesLength = postsCount * height + length * 2;
+            const tubeCost = tubesLength * tubePrice;
+            
+            const base = fenceCost + tubeCost;
+            const deliveryCost = delivery ? 3000 + length * 50 : 0;
+            const mountCost = mount ? length * MOUNT_FENCE : 0;
             const total = base + deliveryCost + mountCost;
 
             document.getElementById('paramLabel').textContent = 'Длина забора:';
             document.getElementById('paramValue').textContent = length.toFixed(1) + ' пог.м';
             document.getElementById('baseLabel').textContent = 'Стоимость конструкции:';
-            document.getElementById('basePrice').textContent = Math.round(base).toLocaleString() + '₽';
-            document.getElementById('deliveryPrice').textContent = Math.round(deliveryCost).toLocaleString() + '₽';
-            document.getElementById('mountPrice').textContent = Math.round(mountCost).toLocaleString() + '₽';
-            document.getElementById('totalPrice').textContent = Math.round(total).toLocaleString() + '₽';
-            document.getElementById('totalSum').textContent = Math.round(total).toLocaleString() + '₽';
+            document.getElementById('basePrice').textContent = Math.round(base).toLocaleString('ru-RU') + '₽';
+            document.getElementById('deliveryPrice').textContent = Math.round(deliveryCost).toLocaleString('ru-RU') + '₽';
+            document.getElementById('mountPrice').textContent = Math.round(mountCost).toLocaleString('ru-RU') + '₽';
+            document.getElementById('totalPrice').textContent = Math.round(total).toLocaleString('ru-RU') + '₽';
+            document.getElementById('totalSum').textContent = Math.round(total).toLocaleString('ru-RU') + '₽';
 
             // Спецификация
-            const posts = Math.ceil(length / 2.5) + 1;
             document.getElementById('specTable').innerHTML = `
-                <tr><td>Столбы (профильная труба)</td><td>${posts}</td><td>шт</td></tr>
-                <tr><td>Горизонтальные перекладины</td><td>${Math.ceil(length / 2.5)}</td><td>ряд</td></tr>
-                <tr><td>Профнастил</td><td>${length.toFixed(1)}</td><td>пог.м</td></tr>
+                <tr><td>Столбы (профильная труба)</td><td>${postsCount}</td><td>шт</td></tr>
+                <tr><td>Горизонтальные перекладины</td><td>${Math.ceil(length / postStep) * 2}</td><td>ряд</td></tr>
+                <tr><td>Штакет</td><td>${length.toFixed(1)}</td><td>пог.м</td></tr>
             `;
 
             drawFence({ length, height, color });
         }
 
-        // Запуск
+        // РАСЧЕТ
+        function calculate() {
+            if (currentTab === 'canopy') calculateCanopy();
+            else calculateFence();
+        }
+
+        // ЗАПУСК
         window.addEventListener('load', () => {
             initThreeJS();
             calculate();
