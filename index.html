@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор навеса и забора - 3D расчет стоимости</title>
+    <style>
+        * { box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; background: #fff; color: #222; font: 13px Arial, sans-serif; }
+        body { min-width: 320px; }
+        a { color: #17649a; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .page { width: min(1200px, calc(100% - 32px)); margin: 0 auto; padding-bottom: 60px; }
+        .header { border-top: 1px solid #d8dde1; border-bottom: 1px solid #d8dde1; margin-top: 20px; padding: 13px 0 14px; }
+        .header-row { display: flex; justify-content: space-between; gap: 20px; align-items: flex-start; }
+        .header-left { line-height: 1.55; }
+        .header-left b { font-size: 13px; }
+        .header-right { text-align: right; line-height: 1.5; }
+        .header-right strong { font-size: 17px; }
+        .nav { padding: 10px 0; border-bottom: 1px solid #d8dde1; display: flex; gap: 20px; flex-wrap: wrap; }
+        .nav a { font-size: 12px; }
+        .breadcrumb { margin: 20px 0 17px; color: #17649a; }
+        .breadcrumb span { color: #999; margin: 0 7px; }
+        h1 { font-size: 28px; font-weight: normal; line-height: 1.2; margin: 0 0 24px; }
+        .intro { color: #555; line-height: 1.55; max-width: 800px; margin: -10px 0 20px; }
+        .tabs { display: flex; margin-bottom: 22px; gap: 0; }
+        .tabs button { appearance: none; border: 1px solid #17649a; background: #fff; color: #17649a; padding: 9px 18px; font: 13px Arial; cursor: pointer; transition: all 0.2s; }
+        .tabs button + button { margin-left: -1px; }
+        .tabs button:hover { background: #f0f6fb; }
+        .tabs button.active { background: #17649a; color: #fff; }
+        .calculator { display: grid; grid-template-columns: 360px 1fr; gap: 30px; align-items: start; }
+        .panel { min-width: 0; }
+        .section { border-bottom: 1px solid #ddd; padding: 0 0 17px; margin: 0 0 17px; }
+        .section:last-child { border-bottom: 0; }
+        .section-title { font-size: 15px; margin: 0 0 12px; font-weight: 600; }
+        .field { margin: 0 0 13px; }
+        .label { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; color: #333; }
+        .label small { color: #888; font-size: 11px; }
+        input[type=text], input[type=number], select { width: 100%; height: 34px; border: 1px solid #c9cfd4; background: #fff; padding: 7px 9px; font: 13px Arial; color: #222; border-radius: 3px; }
+        select { cursor: pointer; }
+        .range-row { display: grid; grid-template-columns: 1fr 72px; gap: 9px; align-items: center; }
+        input[type=range] { width: 100%; accent-color: #17649a; cursor: pointer; }
+        .number { height: 34px; border: 1px solid #c9cfd4; padding: 7px 8px; text-align: center; background: #fff; }
+        .seg { display: flex; flex-wrap: wrap; gap: 0; }
+        .seg button { appearance: none; border: 1px solid #17649a; background: #fff; color: #17649a; padding: 8px 11px; font: 12px Arial; cursor: pointer; margin: 0 0 -1px -1px; transition: all 0.2s; }
+        .seg button:first-child { margin-left: 0; }
+        .seg button:hover { background: #f0f6fb; }
+        .seg button.active { background: #17649a; color: #fff; z-index: 1; }
+        .note { font-size: 11px; color: #777; line-height: 1.45; margin-top: 6px; }
+        .check { display: flex; gap: 8px; align-items: flex-start; margin: 8px 0; color: #444; }
+        .check input { margin-top: 2px; cursor: pointer; }
+        .check span { cursor: pointer; }
+        .right { min-width: 0; }
+        .scheme { height: 450px; border: 1px solid #d7dce0; background: #f5f7fa; position: relative; margin-bottom: 18px; border-radius: 4px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .scheme canvas { width: 100%; height: 100%; display: block; }
+        .scheme-caption { position: absolute; left: 12px; top: 10px; background: rgba(255,255,255,0.95); border: 1px solid #d7dce0; padding: 6px 9px; font-size: 11px; color: #666; border-radius: 3px; z-index: 10; }
+        .hidden { display: none !important; }
+        .controls-3d { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
+        .controls-3d button { appearance: none; border: 1px solid #d7dce0; background: #fff; color: #222; padding: 6px 12px; font: 12px Arial; cursor: pointer; border-radius: 3px; transition: all 0.2s; }
+        .controls-3d button:hover { background: #f0f6fb; border-color: #17649a; color: #17649a; }
+        .price-box { border-top: 2px solid #17649a; padding-top: 8px; margin-bottom: 16px; }
+        .price-line { display: grid; grid-template-columns: 1fr auto; gap: 20px; padding: 7px 0; border-bottom: 1px solid #e2e5e7; }
+        .price-line .v { white-space: nowrap; text-align: right; }
+        .price-line.total { font-size: 18px; font-weight: bold; border-bottom: 0; padding-top: 12px; }
+        .price-line.total .v { color: #17649a; }
+        .spec { margin-top: 22px; }
+        .spec h2, .content h2 { font-size: 21px; font-weight: normal; margin: 0 0 14px; }
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        th, td { text-align: left; border: 1px solid #d9dee2; padding: 8px 9px; vertical-align: top; }
+        th { background: #f6f7f8; font-weight: bold; }
+        .ok { color: #286b35; background: #f2f8f3; border: 1px solid #cfe2d2; padding: 9px 10px; margin-bottom: 16px; line-height: 1.45; font-size: 12px; border-radius: 3px; }
+        .content { margin-top: 35px; border-top: 1px solid #ddd; padding-top: 24px; }
+        .content p { line-height: 1.6; margin: 0 0 13px; }
+        .benefits { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 20px; }
+        .benefit { display: grid; grid-template-columns: 36px 1fr; gap: 10px; }
+        .bnum { width: 30px; height: 30px; border-radius: 50%; background: #21a9ad; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        .benefit b { font-size: 13px; display: block; margin-bottom: 4px; }
+        .benefit p { font-size: 12px; color: #666; margin: 0; }
+        @media (max-width: 1024px) { .calculator { grid-template-columns: 1fr; } .scheme { height: 400px; } }
+        @media (max-width: 768px) { .page { width: calc(100% - 16px); } .header-row { display: block; } .header-right { text-align: left; margin-top: 8px; } h1 { font-size: 22px; } .benefits { grid-template-columns: 1fr; } .tabs { flex-direction: column; } .tabs button { width: 100%; } .scheme { height: 300px; } }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <header class="header">
+            <div class="header-row">
+                <div class="header-left"><b>🏗️ Калькулятор Навесов</b><br>Расчет стоимости и конструкции</div>
+                <div class="header-right">Быстрая оценка стоимости<br><strong>Наш онлайн калькулятор</strong></div>
+            </div>
+        </header>
+
+        <nav class="nav">
+            <a href="#">Главная</a><a href="#">Навесы</a><a href="#">Заборы</a><a href="#">Материалы</a><a href="#">Калькулятор</a>
+        </nav>
+
+        <div class="breadcrumb"><a href="#">Главная</a><span>/</span>Калькулятор</div>
+        <h1>Калькулятор расчета навеса из профильной трубы</h1>
+        <p class="intro">Рассчитайте стоимость навеса или забора. Стоимость навеса — <b>7 000 ₽ за м²</b>, стоимость забора — <b>1 200 ₽ за пог. м</b>.</p>
+
+        <div class="tabs">
+            <button class="active" data-mode="canopy">Калькулятор навеса</button>
+            <button data-mode="fence">Калькулятор забора</button>
+        </div>
+
+        <!-- CANOPY CALCULATOR -->
+        <div id="canopy" class="calculator">
+            <div class="panel">
+                <div class="section">
+                    <div class="section-title">Тип навеса</div>
+                    <div class="seg" id="canopyType">
+                        <button class="active" data-value="arch">Арочный</button>
+                        <button data-value="gable">Двухскатный</button>
+                        <button data-value="single">Односкатный</button>
+                        <button data-value="semi">Полуарочный</button>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Размеры</div>
+                    <div class="field">
+                        <div class="label"><span>Длина навеса, м</span><small>2–30 м</small></div>
+                        <div class="range-row"><input id="cwR" type="range" min="2" max="30" step="0.1" value="6"><input id="cw" class="number" type="number" min="2" max="30" step="0.1" value="6"></div>
+                    </div>
+                    <div class="field">
+                        <div class="label"><span>Ширина навеса, м</span><small>2–15 м</small></div>
+                        <div class="range-row"><input id="clR" type="range" min="2" max="15" step="0.1" value="5"><input id="cl" class="number" type="number" min="2" max="15" step="0.1" value="5"></div>
+                    </div>
+                    <div class="field">
+                        <div class="label"><span>Высота, м</span><small>2–5 м</small></div>
+                        <div class="range-row"><input id="chR" type="range" min="2" max="5" step="0.1" value="2.5"><input id="ch" class="number" type="number" min="2" max="5" step="0.1" value="2.5"></div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Конфигурация</div>
+                    <div class="seg" id="config">
+                        <button class="active" data-value="standard">Стандарт</button>
+                        <button data-value="reinforced">Усиленная</button>
+                        <button data-value="max">Максимальная</button>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Столбы</div>
+                    <select id="post">
+                        <option value="60x60x2">Труба 60×60×2 мм</option>
+                        <option value="60x60x3" selected>Труба 60×60×3 мм</option>
+                        <option value="80x80x3">Труба 80×80×3 мм</option>
+                    </select>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Кровельный материал</div>
+                    <select id="roof">
+                        <option value="ns20-50" selected>Профнастил НС-20 (0,5 мм)</option>
+                        <option value="ns35-50">Профнастил НС-35 (0,5 мм)</option>
+                        <option value="ns21-50">Профнастил НС-21 (0,5 мм)</option>
+                    </select>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Цвет</div>
+                    <select id="color">
+                        <option value="#505050">Графит серый 7024</option>
+                        <option value="#1a1a1a">Черный 9005</option>
+                        <option value="#6b4423">Шоколадно-коричневый 8017</option>
+                        <option value="#2d5016">Зеленый мох 6005</option>
+                    </select>
+                </div>
+
+                <div class="section">
+                    <label class="check"><input id="delivery" type="checkbox" checked><span>Доставка</span></label>
+                    <label class="check"><input id="mount" type="checkbox" checked><span>Монтаж</span></label>
+                </div>
+            </div>
+
+            <div class="right">
+                <div id="canvas-container" class="scheme">
+                    <div class="scheme-caption">3D модель навеса</div>
+                    <canvas id="three-canvas"></canvas>
+                </div>
+
+                <div class="controls-3d">
+                    <button id="btn-3d">3D</button><button id="btn-top">Сверху</button><button id="btn-front">Спереди</button><button id="btn-side">Сбоку</button><button id="btn-iso">Изометрия</button><button id="btn-reset">Сбросить</button>
+                </div>
+
+                <div class="price-box">
+                    <div class="price-line"><span>Площадь навеса</span><span class="v" id="areaOut">30,00 м²</span></div>
+                    <div class="price-line"><span>Стоимость навеса (7 000 ₽/м²)</span><span class="v" id="baseOut">210 000 ₽</span></div>
+                    <div class="price-line"><span>Доставка</span><span class="v" id="deliveryOut">0 ₽</span></div>
+                    <div class="price-line"><span>Монтаж</span><span class="v" id="mountOut">0 ₽</span></div>
+                    <div class="price-line total"><span>Итого</span><span class="v" id="totalOut">210 000 ₽</span></div>
+                </div>
+
+                <div class="ok" id="quality">Конструкция рассчитана оптимально.</div>
+
+                <div class="spec">
+                    <h2>Спецификация</h2>
+                    <div class="table-wrap"><table><thead><tr><th>№</th><th>Наименование</th><th>Количество</th><th>Ед.</th></tr></thead><tbody id="canopySpec"></tbody></table></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FENCE CALCULATOR -->
+        <div id="fence" class="calculator hidden">
+            <div class="panel">
+                <div class="section">
+                    <div class="section-title">Материал забора</div>
+                    <select id="fMaterial">
+                        <option value="ns20" selected>Профнастил НС-20</option>
+                        <option value="ns35">Профнастил НС-35</option>
+                    </select>
+                </div>
+
+                <div class="section">
+                    <div class="field">
+                        <div class="label"><span>Длина забора, м</span><small>1–200 м</small></div>
+                        <div class="range-row"><input id="flR" type="range" min="1" max="200" step="0.1" value="20"><input id="fl" class="number" type="number" min="1" max="200" step="0.1" value="20"></div>
+                    </div>
+                    <div class="field">
+                        <div class="label"><span>Высота забора, м</span><small>1–3 м</small></div>
+                        <div class="range-row"><input id="fhR" type="range" min="1" max="3" step="0.1" value="1.8"><input id="fh" class="number" type="number" min="1" max="3" step="0.1" value="1.8"></div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Столбы</div>
+                    <select id="fPost">
+                        <option value="60x60x2">Труба 60×60×2 мм</option>
+                        <option value="60x60x3" selected>Труба 60×60×3 мм</option>
+                    </select>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Цвет</div>
+                    <select id="fColor">
+                        <option value="#505050">Графит серый 7024</option>
+                        <option value="#1a1a1a">Черный 9005</option>
+                    </select>
+                </div>
+
+                <div class="section">
+                    <label class="check"><input id="fDelivery" type="checkbox" checked><span>Доставка</span></label>
+                    <label class="check"><input id="fMount" type="checkbox" checked><span>Монтаж</span></label>
+                </div>
+            </div>
+
+            <div class="right">
+                <div id="fence-canvas-container" class="scheme">
+                    <div class="scheme-caption">3D модель забора</div>
+                    <canvas id="fence-three-canvas"></canvas>
+                </div>
+
+                <div class="controls-3d">
+                    <button id="fbtn-3d">3D</button><button id="fbtn-top">Сверху</button><button id="fbtn-front">Спереди</button><button id="fbtn-iso">Изометрия</button><button id="fbtn-reset">Сбросить</button>
+                </div>
+
+                <div class="price-box">
+                    <div class="price-line"><span>Длина забора</span><span class="v" id="fLengthOut">20,00 пог. м</span></div>
+                    <div class="price-line"><span>Стоимость (1 200 ₽/пог. м)</span><span class="v" id="fBaseOut">24 000 ₽</span></div>
+                    <div class="price-line"><span>Доставка</span><span class="v" id="fDeliveryOut">0 ₽</span></div>
+                    <div class="price-line"><span>Монтаж</span><span class="v" id="fMountOut">0 ₽</span></div>
+                    <div class="price-line total"><span>Итого</span><span class="v" id="fTotalOut">24 000 ₽</span></div>
+                </div>
+
+                <div class="ok" id="fQuality">Расчет выполнен.</div>
+
+                <div class="spec">
+                    <h2>Спецификация</h2>
+                    <div class="table-wrap"><table><thead><tr><th>№</th><th>Наименование</th><th>Количество</th><th>Ед.</th></tr></thead><tbody id="fenceSpec"></tbody></table></div>
+                </div>
+            </div>
+        </div>
+
+        <section class="content">
+            <h2>Преимущества</h2>
+            <div class="benefits">
+                <div class="benefit"><div class="bnum">1</div><div><b>Быстрый расчет</b><p>3D модель обновляется в реальном времени при изменении параметров.</p></div></div>
+                <div class="benefit"><div class="bnum">2</div><div><b>Понятная цена</b><p>7 000 ₽/м² для навеса и 1 200 ₽/пог.м для забора.</p></div></div>
+                <div class="benefit"><div class="bnum">3</div><div><b>Полная спецификация</b><p>Автоматический расчет всех элементов конструкции.</p></div></div>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@r128/examples/js/controls/OrbitControls.js"></script>
+
+    <script>
+        // Данные материалов
+        const MATERIALS = {
+            posts: { '60x60x2': 'Труба 60×60×2', '60x60x3': 'Труба 60×60×3', '80x80x3': 'Труба 80×80×3' },
+            roofing: { 'ns20-50': 'Профнастил НС-20', 'ns35-50': 'Профнастил НС-35', 'ns21-50': 'Профнастил НС-21' },
+            colors: { '#505050': 'Графит 7024', '#1a1a1a': 'Черный 9005', '#6b4423': 'Коричневый 8017', '#2d5016': 'Зеленый 6005' }
+        };
+
+        const PRICES = { CANOPY: 7000, FENCE: 1200 };
+
+        function formatCurrency(v) { return new Intl.NumberFormat('ru-RU').format(Math.round(v)) + ' ₽'; }
+        function formatNum(v) { return v.toFixed(2).replace('.', ','); }
+
+        // Three.js Scene
+        class Scene3D {
+            constructor(canvasId, type) {
+                this.canvas = document.getElementById(canvasId);
+                this.type = type;
+                this.scene = new THREE.Scene();
+                this.scene.background = new THREE.Color(0xf5f7fa);
+                
+                const w = this.canvas.clientWidth, h = this.canvas.clientHeight;
+                this.camera = new THREE.PerspectiveCamera(75, w / h, 0.1, 1000);
+                this.camera.position.set(15, 10, 15);
+                this.camera.lookAt(0, 0, 0);
+                
+                this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, antialias: true });
+                this.renderer.setSize(w, h);
+                this.renderer.shadowMap.enabled = true;
+                
+                // Lighting
+                const ambLight = new THREE.AmbientLight(0xfff, 0.6);
+                this.scene.add(ambLight);
+                const dirLight = new THREE.DirectionalLight(0xfff, 0.8);
+                dirLight.position.set(20, 30, 20);
+                dirLight.castShadow = true;
+                dirLight.shadow.mapSize.width = 2048;
+                dirLight.shadow.mapSize.height = 2048;
+                this.scene.add(dirLight);
+                
+                // Ground
+                const groundGeo = new THREE.PlaneGeometry(100, 100);
+                const groundMat = new THREE.MeshStandardMaterial({ color: 0xd4d4d4 });
+                const ground = new THREE.Mesh(groundGeo, groundMat);
+                ground.rotation.x = -Math.PI / 2;
+                ground.receiveShadow = true;
+                ground.position.y = -2;
+                this.scene.add(ground);
+                
+                // Controls
+                this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+                this.controls.enableDamping = true;
+                this.controls.dampingFactor = 0.05;
+                this.controls.minDistance = 10;
+                this.controls.maxDistance = 80;
+                
+                this.group = new THREE.Group();
+                this.scene.add(this.group);
+                
+                this.animate();
+                window.addEventListener('resize', () => this.onResize());
+            }
+
+            animate = () => {
+                requestAnimationFrame(this.animate);
+                this.controls.update();
+                this.renderer.render(this.scene, this.camera);
+            }
+
+            onResize = () => {
+                const w = this.canvas.clientWidth, h = this.canvas.clientHeight;
+                this.camera.aspect = w / h;
+                this.camera.updateProjectionMatrix();
+                this.renderer.setSize(w, h);
+            }
+
+            clear() {
+                while (this.group.children.length) {
+                    const child = this.group.children[0];
+                    child.geometry?.dispose();
+                    child.material?.dispose();
+                    this.group.remove(child);
+                }
+            }
+
+            createBox(w, h, d, color) {
+                const geo = new THREE.BoxGeometry(w, h, d);
+                const mat = new THREE.MeshStandardMaterial({ color, metalness: 0.7, roughness: 0.3 });
+                const mesh = new THREE.Mesh(geo, mat);
+                mesh.castShadow = true;
+                mesh.receiveShadow = true;
+                return mesh;
+            }
+
+            updateCanopy(state) {
+                this.clear();
+                const { length, width, height, type, color } = state;
+                const metalColor = new THREE.Color(color);
+                
+                // Posts
+                const step = 2.5;
+                const count = Math.ceil(length / step) + 1;
+                for (let i = 0; i < count; i++) {
+                    const z = -length / 2 + i * step;
+                    const post1 = this.createBox(0.08, height, 0.08, metalColor);
+                    post1.position.set(-width / 2, height / 2, z);
+                    this.group.add(post1);
+                    const post2 = this.createBox(0.08, height, 0.08, metalColor);
+                    post2.position.set(width / 2, height / 2, z);
+                    this.group.add(post2);
+                }
+                
+                // Roof panels
+                const panelCount = Math.ceil(length / 1.5);
+                for (let i = 0; i < panelCount; i++) {
+                    const z1 = -length / 2 + i * 1.5;
+                    const roof = this.createBox(width, 0.05, 1.5, 0xc0c0c0);
+                    roof.position.set(0, height - 0.1, z1);
+                    this.group.add(roof);
+                }
+                
+                // Trusses
+                const trusses = Math.ceil(length / 1.2) + 1;
+                for (let i = 0; i < trusses; i++) {
+                    const z = -length / 2 + i * 1.2;
+                    const beam = this.createBox(width * 0.9, 0.08, 0.04, 0x404040);
+                    beam.position.set(0, height - 0.3, z);
+                    this.group.add(beam);
+                }
+            }
+
+            updateFence(state) {
+                this.clear();
+                const { length, height, color } = state;
+                const metalColor = new THREE.Color(color);
+                
+                // Posts
+                const step = 2.5;
+                const count = Math.ceil(length / step) + 1;
+                for (let i = 0; i < count; i++) {
+                    const x = -length / 2 + i * step;
+                    const post = this.createBox(0.08, height, 0.08, metalColor);
+                    post.position.set(x, height / 2, 0);
+                    this.group.add(post);
+                }
+                
+                // Rails
+                const rail1 = this.createBox(length * 0.95, 0.04, 0.08, 0x404040);
+                rail1.position.set(0, height - 0.15, 0);
+                this.group.add(rail1);
+                const rail2 = this.createBox(length * 0.95, 0.04, 0.08, 0x404040);
+                rail2.position.set(0, height / 2, 0);
+                this.group.add(rail2);
+                
+                // Filling
+                const fillCount = Math.ceil(length / 2.5);
+                for (let i = 0; i < fillCount; i++) {
+                    const x = -length / 2 + i * 2.5;
+                    const fill = this.createBox(2.4, height - 0.3, 0.02, metalColor);
+                    fill.position.set(x, height / 2, 0.05);
+                    this.group.add(fill);
+                }
+            }
+
+            resetView(view) {
+                let pos;
+                switch (view) {
+                    case 'top': pos = new THREE.Vector3(0, 25, 0.1); break;
+                    case 'front': pos = new THREE.Vector3(0, 5, 20); break;
+                    case 'side': pos = new THREE.Vector3(20, 5, 0); break;
+                    case 'iso': pos = new THREE.Vector3(15, 12, 15); break;
+                    default: pos = new THREE.Vector3(15, 10, 15);
+                }
+                this.camera.position.copy(pos);
+                this.camera.lookAt(0, 3, 0);
+            }
+        }
+
+        let canopyScene = new Scene3D('three-canvas', 'canopy');
+        let fenceScene = new Scene3D('fence-three-canvas', 'fence');
+        let currentMode = 'canopy';
+
+        function bindInputs(rangeId, numberId) {
+            const r = document.getElementById(rangeId);
+            const n = document.getElementById(numberId);
+            r.addEventListener('input', () => { n.value = r.value; calc(); });
+            n.addEventListener('input', () => { r.value = n.value; calc(); });
+        }
+
+        bindInputs('cwR', 'cw');
+        bindInputs('clR', 'cl');
+        bindInputs('chR', 'ch');
+        bindInputs('flR', 'fl');
+        bindInputs('fhR', 'fh');
+
+        function updateSeg(id, btn) {
+            document.querySelectorAll(`#${id} button`).forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        document.querySelectorAll('#canopyType button').forEach(b => b.addEventListener('click', function() { updateSeg('canopyType', this); calc(); }));
+        document.querySelectorAll('#config button').forEach(b => b.addEventListener('click', function() { updateSeg('config', this); calc(); }));
+        document.querySelectorAll('.tabs button').forEach(b => b.addEventListener('click', function() {
+            currentMode = this.dataset.mode;
+            document.querySelectorAll('.tabs button').forEach(x => x.classList.remove('active'));
+            this.classList.add('active');
+            document.getElementById('canopy').classList.toggle('hidden', currentMode !== 'canopy');
+            document.getElementById('fence').classList.toggle('hidden', currentMode !== 'fence');
+            document.querySelector('h1').textContent = currentMode === 'canopy' ? 'Калькулятор расчета навеса из профильной трубы' : 'Калькулятор расчета забора';
+            calc();
+        }));
+
+        ['post', 'roof', 'color', 'delivery', 'mount', 'fMaterial', 'fPost', 'fColor', 'fDelivery', 'fMount'].forEach(id => {
+            document.getElementById(id)?.addEventListener('change', calc);
+        });
+
+        document.getElementById('btn-3d')?.addEventListener('click', () => canopyScene.resetView('3d'));
+        document.getElementById('btn-top')?.addEventListener('click', () => canopyScene.resetView('top'));
+        document.getElementById('btn-front')?.addEventListener('click', () => canopyScene.resetView('front'));
+        document.getElementById('btn-side')?.addEventListener('click', () => canopyScene.resetView('side'));
+        document.getElementById('btn-iso')?.addEventListener('click', () => canopyScene.resetView('iso'));
+        document.getElementById('btn-reset')?.addEventListener('click', () => canopyScene.resetView('3d'));
+
+        document.getElementById('fbtn-3d')?.addEventListener('click', () => fenceScene.resetView('3d'));
+        document.getElementById('fbtn-top')?.addEventListener('click', () => fenceScene.resetView('top'));
+        document.getElementById('fbtn-front')?.addEventListener('click', () => fenceScene.resetView('front'));
+        document.getElementById('fbtn-iso')?.addEventListener('click', () => fenceScene.resetView('iso'));
+        document.getElementById('fbtn-reset')?.addEventListener('click', () => fenceScene.resetView('3d'));
+
+        function calc() {
+            if (currentMode === 'canopy') calcCanopy();
+            else calcFence();
+        }
+
+        function calcCanopy() {
+            const length = parseFloat(document.getElementById('cw').value);
+            const width = parseFloat(document.getElementById('cl').value);
+            const height = parseFloat(document.getElementById('ch').value);
+            const config = document.querySelector('#config button.active').dataset.value;
+            const type = document.querySelector('#canopyType button.active').dataset.value;
+            const post = document.getElementById('post').value;
+            const roof = document.getElementById('roof').value;
+            const color = document.getElementById('color').value;
+            const delivery = document.getElementById('delivery').checked;
+            const mount = document.getElementById('mount').checked;
+
+            const area = length * width;
+            const base = area * PRICES.CANOPY;
+            const step = 2.5;
+            const posts = Math.ceil(length / step) + 1;
+            const trusses = Math.ceil(length / 1.2) + 1;
+            const rows = Math.max(1, Math.ceil(length / 0.4));
+            
+            let deliveryCost = 0;
+            if (delivery) deliveryCost = Math.max(3500, Math.min(15000, 3000 + area * 80));
+            let mountCost = 0;
+            if (mount) mountCost = Math.max(12000, area * 700);
+
+            const total = base + deliveryCost + mountCost;
+
+            document.getElementById('areaOut').textContent = formatNum(area) + ' м²';
+            document.getElementById('baseOut').textContent = formatCurrency(base);
+            document.getElementById('deliveryOut').textContent = formatCurrency(deliveryCost);
+            document.getElementById('mountOut').textContent = formatCurrency(mountCost);
+            document.getElementById('totalOut').textContent = formatCurrency(total);
+            
+            const spec = [
+                ['1', `Профильная труба ${MATERIALS.posts[post]}`, posts, 'шт.'],
+                ['2', 'Фермы / рамы', trusses, 'шт.'],
+                ['3', 'Обрешетка', rows, 'ряд.'],
+                ['4', `Кровля ${MATERIALS.roofing[roof]}`, formatNum(area * 1.05), 'м²'],
+                ['5', 'Цвет', MATERIALS.colors[color], '']
+            ];
+            document.getElementById('canopySpec').innerHTML = spec.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('');
+
+            canopyScene.updateCanopy({ length, width, height, type, color });
+        }
+
+        function calcFence() {
+            const length = parseFloat(document.getElementById('fl').value);
+            const height = parseFloat(document.getElementById('fh').value);
+            const material = document.getElementById('fMaterial').value;
+            const post = document.getElementById('fPost').value;
+            const color = document.getElementById('fColor').value;
+            const delivery = document.getElementById('fDelivery').checked;
+            const mount = document.getElementById('fMount').checked;
+
+            const base = length * PRICES.FENCE;
+            const posts = Math.ceil(length / 2.5) + 1;
+            const crossbars = Math.ceil(length / 2.5);
+
+            let deliveryCost = 0;
+            if (delivery) deliveryCost = Math.max(3000, Math.min(12000, 2500 + length * 60));
+            let mountCost = 0;
+            if (mount) mountCost = Math.max(8000, length * 450);
+
+            const total = base + deliveryCost + mountCost;
+
+            document.getElementById('fLengthOut').textContent = formatNum(length) + ' пог. м';
+            document.getElementById('fBaseOut').textContent = formatCurrency(base);
+            document.getElementById('fDeliveryOut').textContent = formatCurrency(deliveryCost);
+            document.getElementById('fMountOut').textContent = formatCurrency(mountCost);
+            document.getElementById('fTotalOut').textContent = formatCurrency(total);
+
+            const spec = [
+                ['1', `Столбы ${MATERIALS.posts[post]}`, posts, 'шт.'],
+                ['2', 'Поперечины', crossbars, 'ряд.'],
+                ['3', 'Профнастил', formatNum(length), 'пог. м']
+            ];
+            document.getElementById('fenceSpec').innerHTML = spec.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('');
+
+            fenceScene.updateFence({ length, height, color });
+        }
+
+        calc();
+    </script>
+</body>
+</html>
